@@ -29,11 +29,6 @@
     fsType = "tmpfs";
   };
 
-  fileSystems."/iso" = {
-    device = "/dev/disk/by-uuid/1980-01-01-00-00-00-00";
-    fsType = "iso9660";
-  };
-
   fileSystems."/nix/.ro-store" = {
     device = "/iso/nix-store.squashfs";
     fsType = "squashfs";
