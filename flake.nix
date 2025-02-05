@@ -47,6 +47,28 @@
         ];
       };
 
+      nixosConfigurations.game-servers = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        system = system;
+        modules = [
+          ./hosts/game-servers/configuration.nix
+          ./nixosModules
+          inputs.stylix.nixosModules.stylix
+          nix-flatpak.nixosModules.nix-flatpak
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jade = {
+              imports = [
+                ./hosts/game-servers/home.nix
+              ];
+            };
+          }
+        ];
+      };
+
       nixosConfigurations.media = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         system = system;
