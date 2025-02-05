@@ -16,6 +16,12 @@ in
       enable = true;
       enableCompletion = true;
       syntaxHighlighting.enable = true;
+      autosuggestion.enable = true;
+
+      shellAliases = {
+        "z" = "zoxide";
+        "zshsrc" = "source ~/.zshrc";
+      };
     };
   };
 }
