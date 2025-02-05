@@ -18,6 +18,9 @@ in
         color-scheme = lib.mkForce "prefer-dark";
         clock-format = "12h";
       };
+      "org/gnome/desktop/wm/preferences" = {
+        button-layout = ":minimize,maximize,close";
+      };
     };
   };
 }
