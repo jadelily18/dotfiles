@@ -42,6 +42,8 @@
     steam
     btop
     filezilla
+    eza
+    zoxide
   ];
 
   gui.enable = true;

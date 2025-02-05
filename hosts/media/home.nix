@@ -32,6 +32,8 @@
     git
     starship
     nh
+    eza
+    zoxide
   ];
 
   gui.enable = false;
