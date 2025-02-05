@@ -29,12 +29,6 @@ in
         credential.helper = "${pkgs.git.override { withLibsecret = true; }}/bin/git-credential-libsecret";
 
         init.defaultBranch = "main";
-
-        # user = {
-        #   signingKey = "910F4FE160AE36BA";
-        #   name = "Jade Nash";
-        #   email = "jade@lilydev.com";
-        # };
       };
     };
   };
