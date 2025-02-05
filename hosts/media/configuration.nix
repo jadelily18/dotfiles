@@ -35,7 +35,6 @@
   services.jellyfin = {
     enable = true;
     openFirewall = true;
-    dataDir = "/media/data/jellyfin";
   };
 
   environment.systemPackages = with pkgs; [
