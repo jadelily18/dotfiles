@@ -12,6 +12,8 @@
     stylix.url = "github:danth/stylix";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
   outputs =
@@ -19,6 +21,7 @@
       nixpkgs,
       home-manager,
       nix-flatpak,
+      vscode-server,
       ...
     }@inputs:
     let
@@ -55,6 +58,7 @@
           ./nixosModules
           inputs.stylix.nixosModules.stylix
           nix-flatpak.nixosModules.nix-flatpak
+          vscode-server.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.extraSpecialArgs = { inherit inputs; };

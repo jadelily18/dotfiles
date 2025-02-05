@@ -32,6 +32,8 @@
     allowSFTP = true;
   };
 
+  services.vscode-server.enable = true;
+
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
