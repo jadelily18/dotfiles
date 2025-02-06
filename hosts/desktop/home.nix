@@ -39,6 +39,7 @@
       nixos-generators
       steam
       filezilla
+      modrinth-app
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
 
