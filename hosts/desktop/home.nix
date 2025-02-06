@@ -45,6 +45,8 @@
 
   gui.enable = true;
 
+  git.signingKey = "910F4FE160AE36BA";
+
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {

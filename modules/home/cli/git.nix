@@ -11,6 +11,11 @@ in
 {
   options.git = {
     enable = lib.mkEnableOption "Enable git";
+
+    signingKey = lib.mkOption {
+      type = lib.types.string;
+      description = "The GPG key to use for signing commits";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -21,7 +26,7 @@ in
       userEmail = "jade@lilydev.com";
 
       signing = {
-        key = "910F4FE160AE36BA";
+        key = cfg.signingKey;
         signByDefault = true;
       };
 
