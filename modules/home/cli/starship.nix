@@ -14,7 +14,7 @@ in
       settings = {
         add_newline = false;
 
-        format = "$username$directory$character";
+        format = "$username$hostname $directory $character";
 
         character = {
           success_symbol = "[>>](bold green)";
@@ -23,12 +23,17 @@ in
 
         username = {
           show_always = true;
-          format = "[$user ]($style italic)";
+          format = "[$user]($style italic)";
           disabled = false;
         };
 
+        hostname = {
+          ssh_only = true;
+          format = "[@$hostname]($style italic purple)";
+        };
+
         directory = {
-          format = "[$path ]($style italic)";
+          format = "[$path]($style italic)";
         };
       };
     };
