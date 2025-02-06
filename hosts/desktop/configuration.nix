@@ -22,6 +22,8 @@
     description = "jade lily";
   };
 
+  programs.firefox.enable = true;
+
   gnupg.enable = true;
 
   networking.hostName = "jade-nixos";
