@@ -26,15 +26,12 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
-    lunarvim
-    _1password-cli
-    git
-    starship
-    nh
-    eza
-    zoxide
-  ];
+  home.packages =
+    with pkgs;
+    [
+      _1password-cli
+    ]
+    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
 
   gui.enable = false;
 

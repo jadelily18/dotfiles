@@ -33,7 +33,7 @@
         system = system;
         modules = [
           ./hosts/desktop/configuration.nix
-          ./nixosModules
+          ./modules
           inputs.stylix.nixosModules.stylix
           nix-flatpak.nixosModules.nix-flatpak
           home-manager.nixosModules.home-manager
@@ -55,7 +55,7 @@
         system = system;
         modules = [
           ./hosts/game-servers/configuration.nix
-          ./nixosModules
+          ./modules
           inputs.stylix.nixosModules.stylix
           nix-flatpak.nixosModules.nix-flatpak
           vscode-server.nixosModules.default
@@ -78,7 +78,7 @@
         system = system;
         modules = [
           ./hosts/media/configuration.nix
-          ./nixosModules
+          ./modules
           inputs.stylix.nixosModules.stylix
           nix-flatpak.nixosModules.nix-flatpak
           home-manager.nixosModules.home-manager
@@ -95,6 +95,6 @@
         ];
       };
 
-      homeManagerModules.default = ./homeManagerModules;
+      homeManagerModules.default = ./modules/home;
     };
 }

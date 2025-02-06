@@ -26,25 +26,21 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
-    lunarvim
-    vesktop
-    kitty
-    _1password-cli
-    _1password-gui
-    vscode
-    git
-    nixfmt-rfc-style
-    xclip
-    starship
-    nh
-    nixos-generators
-    steam
-    btop
-    filezilla
-    eza
-    zoxide
-  ];
+  home.packages =
+    with pkgs;
+    [
+      vesktop
+      kitty
+      _1password-cli
+      _1password-gui
+      vscode
+      nixfmt-rfc-style
+      xclip
+      nixos-generators
+      steam
+      filezilla
+    ]
+    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
 
   gui.enable = true;
 
