@@ -21,7 +21,7 @@
     description = "jade lily";
   };
 
-  stylix-theme.enable = false;
+  stylix-theme.enable = true;
 
   gnupg.enable = true;
 
