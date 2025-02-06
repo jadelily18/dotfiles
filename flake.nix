@@ -22,78 +22,44 @@
       home-manager,
       nix-flatpak,
       vscode-server,
+      stylix,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
     in
     {
-      nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        system = system;
-        modules = [
-          ./hosts/desktop/configuration.nix
-          ./modules
-          inputs.stylix.nixosModules.stylix
-          nix-flatpak.nixosModules.nix-flatpak
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.jade = {
-              imports = [
-                ./hosts/desktop/home.nix
-              ];
+      nixosConfigurations =
+        let
+          mkConfig =
+            name: extraModules:
+            nixpkgs.lib.nixosSystem {
+              specialArgs = { inherit inputs; };
+              inherit system;
+              modules = [
+                ./hosts/${name}/configuration.nix
+                ./modules
+                stylix.nixosModules.stylix
+                nix-flatpak.nixosModules.nix-flatpak
+                home-manager.nixosModules.home-manager
+                {
+                  home-manager.extraSpecialArgs = { inherit inputs; };
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.users.jade = {
+                    imports = [
+                      ./hosts/${name}/home.nix
+                    ];
+                  };
+                }
+              ] ++ extraModules;
             };
-          }
-        ];
-      };
-
-      nixosConfigurations.game-servers = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        system = system;
-        modules = [
-          ./hosts/game-servers/configuration.nix
-          ./modules
-          inputs.stylix.nixosModules.stylix
-          nix-flatpak.nixosModules.nix-flatpak
-          vscode-server.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.jade = {
-              imports = [
-                ./hosts/game-servers/home.nix
-              ];
-            };
-          }
-        ];
-      };
-
-      nixosConfigurations.media = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        system = system;
-        modules = [
-          ./hosts/media/configuration.nix
-          ./modules
-          inputs.stylix.nixosModules.stylix
-          nix-flatpak.nixosModules.nix-flatpak
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.jade = {
-              imports = [
-                ./hosts/media/home.nix
-              ];
-            };
-          }
-        ];
-      };
+        in
+        {
+          desktop = mkConfig "desktop" [ ];
+          game-servers = mkConfig "game-servers" [ vscode-server.nixosModules.default ];
+          media = mkConfig "media" [ vscode-server.nixosModules.default ];
+        };
 
       homeManagerModules.default = ./modules/home;
     };
