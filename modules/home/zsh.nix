@@ -19,9 +19,12 @@ in
       autosuggestion.enable = true;
 
       shellAliases = {
-        "z" = "zoxide";
         "zshsrc" = "source ~/.zshrc";
       };
+
+      initExtra = ''
+        				eval "$(zoxide init zsh)"
+        			'';
     };
   };
 }
