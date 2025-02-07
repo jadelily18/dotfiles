@@ -13,6 +13,8 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
+
     vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
@@ -21,6 +23,7 @@
       nixpkgs,
       home-manager,
       nix-flatpak,
+      nixos-cosmic,
       vscode-server,
       stylix,
       ...
@@ -59,6 +62,19 @@
           desktop = mkConfig "desktop" [ ];
           game-servers = mkConfig "game-servers" [ vscode-server.nixosModules.default ];
           media = mkConfig "media" [ vscode-server.nixosModules.default ];
+          /*
+            Cosmic stuff is adapted from FelixSchausberger's Cosmic configuration
+            https://github.com/FelixSchausberger/nixos
+          */
+          t480 = mkConfig "t480" [
+            {
+              nix.settings = {
+                substituters = [ "https://cosmic.cachix.org/" ];
+                trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
+              };
+            }
+            nixos-cosmic.nixosModules.default
+          ];
         };
 
       homeManagerModules.default = ./modules/home;
