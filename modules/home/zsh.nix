@@ -19,6 +19,7 @@ in
       autosuggestion.enable = true;
 
       shellAliases = {
+        "ls" = "eza --icons --group-directories-first";
         "zshsrc" = "source ~/.zshrc";
       };
 
