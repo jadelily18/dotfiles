@@ -26,6 +26,8 @@
 
   programs.firefox.enable = true;
 
+  programs.steam.enable = true;
+
   gnupg.enable = true;
 
   networking.hostName = "jade-nixos";
