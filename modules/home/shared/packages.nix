@@ -13,4 +13,5 @@ with pkgs;
   starship
   nh
   btop
+  gitui
 ]

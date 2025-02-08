@@ -22,6 +22,8 @@
     description = "jade lily";
   };
 
+  xdg.portal.enable = true;
+
   programs.firefox.enable = true;
 
   gnupg.enable = true;
