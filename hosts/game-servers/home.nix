@@ -30,6 +30,7 @@
     with pkgs;
     [
       _1password-cli
+      bun
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
 
