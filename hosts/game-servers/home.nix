@@ -31,6 +31,7 @@
     [
       _1password-cli
       devenv
+      nixd
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
 
