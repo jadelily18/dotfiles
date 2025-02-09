@@ -30,7 +30,7 @@
     with pkgs;
     [
       _1password-cli
-      bun
+      devenv
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
 
