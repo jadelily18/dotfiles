@@ -27,15 +27,14 @@ in
         "alt+right" = "next_tab";
         "alt+left" = "previous_tab";
 
+        "ctrl+right" = "no_op";
+        "ctrl+left" = "no_op";
+
         "kitty_mod+c" = "copy_and_clear_or_interrupt";
         "kitty_mod+v" = "paste_from_clipboard";
 
-        # # Delete by word
-        # "kitty_mod+backspace" = "send_text all \x17";
-
-        # # Jump Words
-        # "kitty_mod+left" = "send_text all \x1b\x62";
-        # "kitty_mod+right" = "send_text all \x1b\x66";
+        # zsh ctrl+backspace keybind will not work without this
+        "kitty_mod+backspace" = "no_op";
       };
 
       settings = {
@@ -44,8 +43,6 @@ in
         tab_bar_style = "powerline";
         tab_powerline_style = "slanted";
         tab_title_template = "{title}{' :{}:'.format(num_windows) if num_windows > 1 else ''}";
-
-        theme = "Catppuccin-Mocha";
 
         font_size = 12.0;
         opacity = 0.2;

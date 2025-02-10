@@ -40,6 +40,7 @@
       steam
       filezilla
       modrinth-app
+      prismlauncher
       # davinci-resolve doesn't work properly and I don't want to fix it right now
       spotify
       spicetify-cli
