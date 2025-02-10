@@ -1,4 +1,8 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  ...
+}:
 
 let
   cfg = config.zsh;
@@ -8,6 +12,11 @@ in
     enable = lib.mkEnableOption {
       default = true;
       description = "Enable zsh module";
+    };
+
+    enableKeybinds = lib.mkEnableOption {
+      default = true;
+      description = "Enable zsh keybinds";
     };
   };
 
@@ -25,9 +34,7 @@ in
 
       initExtra = ''
         eval "$(zoxide init zsh)"
-        bindkey "^[[1;5C" forward-word
-        bindkey "^[[1;5D" backward-word
-        bindkey "^H" backward-kill-word
+        ${if cfg.enableKeybinds then (builtins.readFile ../../scripts/modules/zsh/keybinds.zsh) else ""}
       '';
     };
   };
