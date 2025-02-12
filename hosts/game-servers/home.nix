@@ -33,7 +33,8 @@
       devenv
       nixd
     ]
-    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
+    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
+    ++ (import ../../modules/home/shared/development.nix { inherit pkgs; });
 
   gui.enable = false;
 
