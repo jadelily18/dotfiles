@@ -41,12 +41,14 @@
       filezilla
       modrinth-app
       prismlauncher
+      smile
       # davinci-resolve doesn't work properly and I don't want to fix it right now
       spotify
       spicetify-cli
       devenv
     ]
-    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
+    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
+    ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; });
 
   gui.enable = true;
 

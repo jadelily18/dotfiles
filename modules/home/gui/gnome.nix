@@ -21,6 +21,16 @@ in
       "org/gnome/desktop/wm/preferences" = {
         button-layout = ":minimize,maximize,close";
       };
+      "org/gnome/mutter" = {
+        edge-tiling = true;
+      };
+      "org/gnome/settings-daemon/plugins/media-keys" = {
+        custom-keybindings = [
+
+        ];
+
+        # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/"
+      };
     };
   };
 }
