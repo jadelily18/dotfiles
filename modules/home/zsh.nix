@@ -18,6 +18,11 @@ in
       default = true;
       description = "Enable zsh keybinds";
     };
+
+    enableDirenv = lib.mkEnableOption {
+      default = false;
+      description = "Enable direnv integration";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -35,6 +40,7 @@ in
       initExtra = ''
         eval "$(zoxide init zsh)"
         ${if cfg.enableKeybinds then (builtins.readFile ../../scripts/modules/zsh/keybinds.zsh) else ""}
+        ${if cfg.enableDirenv then "eval \"$(direnv hook zsh)\"" else ""}
       '';
     };
   };
