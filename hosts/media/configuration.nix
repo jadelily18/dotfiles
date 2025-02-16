@@ -27,6 +27,8 @@
 
   networking.hostName = "hs-media";
 
+  services.vscode-server.enable = true;
+
   services.openssh = {
     enable = true;
     allowSFTP = true;
