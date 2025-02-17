@@ -19,6 +19,11 @@
     enable = true;
     username = "jade";
     description = "jade lily";
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "docker"
+    ];
   };
 
   stylix-theme.enable = true;
