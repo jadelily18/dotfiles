@@ -29,6 +29,8 @@
 
   services.vscode-server.enable = true;
 
+  virtualisation.docker.enable = true;
+
   services.openssh = {
     enable = true;
     allowSFTP = true;
