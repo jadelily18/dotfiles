@@ -46,6 +46,18 @@
     openFirewall = true;
   };
 
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      80
+      443
+    ];
+    allowedUDPPorts = [
+      80
+      443
+    ];
+  };
+
   environment.systemPackages = with pkgs; [
     zsh
     jellyfin
