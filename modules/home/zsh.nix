@@ -35,6 +35,11 @@ in
       shellAliases = {
         "ls" = "eza --icons --group-directories-first";
         "zshsrc" = "source ~/.zshrc";
+        "gc" = "git commit";
+        "gp" = "git push";
+        "gl" = "git log";
+        "ga" = "git add";
+        "gaa" = "git add --all";
       };
 
       initExtra = ''
