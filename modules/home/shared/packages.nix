@@ -12,6 +12,6 @@ with pkgs;
   lunarvim
   starship
   nh
-  btop
+  bottom
   gitui
 ]

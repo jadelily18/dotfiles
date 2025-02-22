@@ -46,6 +46,7 @@
       spotify
       spicetify-cli
       heroic
+      eyedropper
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
