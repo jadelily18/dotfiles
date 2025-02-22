@@ -37,6 +37,7 @@ in
         "zshsrc" = "source ~/.zshrc";
         "gc" = "git commit";
         "gp" = "git push";
+        "gu" = "git pull";
         "gl" = "git log";
         "ga" = "git add";
         "gaa" = "git add --all";
