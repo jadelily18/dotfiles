@@ -12,5 +12,4 @@
 
   gnupg.enable = lib.mkDefault false;
   stylix-theme.enable = lib.mkDefault true;
-
 }

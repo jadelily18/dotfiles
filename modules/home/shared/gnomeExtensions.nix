@@ -5,5 +5,7 @@ with pkgs.gnomeExtensions;
   smile-complementary-extension
   tray-icons-reloaded
   pop-shell
-  advanced-alttab-window-switcher
+  system-monitor
+  reboot2windows
+  reboottouefi
 ]

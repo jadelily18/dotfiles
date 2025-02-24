@@ -26,11 +26,28 @@ in
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
         custom-keybindings = [
-
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
         ];
-
-        # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/"
       };
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+        name = "Smile";
+        command = "smile";
+        binding = "<Super>semicolon";
+      };
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+        name = "Kitty Terminal";
+        command = "kitty";
+        binding = "<Super>T";
+      };
+
+      "org/gnome/shell".enabled-extensions = [
+        "smile-extension@mijorus.it"
+        "trayIconsReloaded@selfmade.pl"
+        "pop-shell@system76.com"
+        "system-monitor@gnome-shell-extensions.gcampax.github.com"
+        "Reboot2Windows@coooolfan.com"
+        "reboottouefi@ubaygd.com"
+      ];
     };
   };
 }
