@@ -47,6 +47,7 @@
       spicetify-cli
       heroic
       eyedropper
+      openrgb-with-all-plugins
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
