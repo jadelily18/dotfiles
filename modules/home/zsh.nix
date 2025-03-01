@@ -35,6 +35,15 @@ in
       shellAliases = {
         "ls" = "eza --icons --group-directories-first";
         "zshsrc" = "source ~/.zshrc";
+        # docker
+        "dc" = "docker compose";
+        "da" = "docker attach";
+        "dca" = "docker compose attach";
+        "dps" = "docker ps";
+        "dcps" = "docker compose ps";
+        "dlogs" = "docker logs";
+        "dclogs" = "docker compose logs";
+        # git
         "gc" = "git commit";
         "gp" = "git push";
         "gu" = "git pull";
