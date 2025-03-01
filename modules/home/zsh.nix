@@ -35,6 +35,7 @@ in
       shellAliases = {
         "ls" = "eza --icons --group-directories-first";
         "zshsrc" = "source ~/.zshrc";
+        "zed" = "zeditor";
         # docker
         "dc" = "docker compose";
         "da" = "docker attach";
