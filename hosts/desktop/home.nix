@@ -39,7 +39,6 @@
       nixos-generators
       steam
       filezilla
-      modrinth-app
       prismlauncher
       smile
       # davinci-resolve doesn't work properly and I don't want to fix it right now
@@ -48,6 +47,9 @@
       heroic
       eyedropper
       openrgb-with-all-plugins
+      hoppscotch
+      thunderbird
+      gparted
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
@@ -58,6 +60,9 @@
   git.signingKey = "910F4FE160AE36BA";
 
   zsh.enableDirenv = true;
+
+  # gitui's theming is kinda broken
+  stylix.targets.gitui.enable = false;
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

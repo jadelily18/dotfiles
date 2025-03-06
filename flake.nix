@@ -54,6 +54,7 @@
                       ./hosts/${name}/home.nix
                     ];
                   };
+                  home-manager.backupFileExtension = "backup";
                 }
               ] ++ extraModules;
             };
