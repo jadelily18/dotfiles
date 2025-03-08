@@ -31,6 +31,7 @@
   gnupg.enable = true;
 
   networking.hostName = "hs-games";
+  networking.firewall.allowedTCPPorts = [ 25565 ];
 
   services.openssh = {
     enable = true;
