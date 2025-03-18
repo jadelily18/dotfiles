@@ -51,6 +51,11 @@
       thunderbird
       gparted
       packwiz
+      blender
+      jetbrains-toolbox
+      libsForQt5.qt5ct
+      catppuccin-qt5ct
+      slack
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
@@ -64,6 +69,8 @@
 
   # gitui's theming is kinda broken
   stylix.targets.gitui.enable = false;
+
+  stylix.targets.qt.enable = false;
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

@@ -15,6 +15,11 @@
 
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
 
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
@@ -24,6 +29,7 @@
       home-manager,
       nix-flatpak,
       nixos-cosmic,
+      nix-darwin,
       vscode-server,
       stylix,
       ...
@@ -34,7 +40,7 @@
     {
       nixosConfigurations =
         let
-          mkConfig =
+          mkNixosConfig =
             name: extraModules:
             nixpkgs.lib.nixosSystem {
               specialArgs = { inherit inputs; };
@@ -60,14 +66,14 @@
             };
         in
         {
-          desktop = mkConfig "desktop" [ ];
-          game-servers = mkConfig "game-servers" [ vscode-server.nixosModules.default ];
-          media = mkConfig "media" [ vscode-server.nixosModules.default ];
+          desktop = mkNixosConfig "desktop" [ ];
+          game-servers = mkNixosConfig "game-servers" [ vscode-server.nixosModules.default ];
+          media = mkNixosConfig "media" [ vscode-server.nixosModules.default ];
           /*
             Cosmic stuff is adapted from FelixSchausberger's Cosmic configuration
             https://github.com/FelixSchausberger/nixos
           */
-          t480 = mkConfig "t480" [
+          t480 = mkNixosConfig "t480" [
             {
               nix.settings = {
                 substituters = [ "https://cosmic.cachix.org/" ];
@@ -77,6 +83,28 @@
             nixos-cosmic.nixosModules.default
           ];
         };
+
+      # MacBook configuration
+      darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/macbook/configuration.nix
+          # stylix.nixosModules.stylix
+          # nix-flatpak.nixosModules.nix-flatpak
+          # home-manager.nixosModules.home-manager
+          # {
+          #   home-manager.extraSpecialArgs = { inherit inputs; };
+          #   home-manager.useGlobalPkgs = true;
+          #   home-manager.useUserPackages = true;
+          #   home-manager.users.jade = {
+          #     imports = [
+          #       ./hosts/macbook/home.nix
+          #     ];
+          #   };
+          #   home-manager.backupFileExtension = "backup";
+          # }
+        ];
+      };
 
       homeManagerModules.default = ./modules/home;
     };

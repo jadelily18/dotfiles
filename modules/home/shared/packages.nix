@@ -14,4 +14,5 @@ with pkgs;
   nh
   bottom
   gitui
+  dust
 ]

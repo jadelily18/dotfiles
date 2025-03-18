@@ -3,19 +3,18 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 {
-  lib,
-  pkgs,
   inputs,
+  pkgs,
   ...
 }:
 
 {
   imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
     ../../user.nix
     inputs.home-manager.nixosModules.default
   ];
+
+  inputs.nixpkgs.hostPlatform = "aarch64-darwin";
 
   primary-user = {
     enable = true;
@@ -23,38 +22,17 @@
     description = "jade lily";
   };
 
-  xdg.portal.enable = true;
-
   programs.firefox.enable = true;
 
   programs.steam.enable = true;
 
   gnupg.enable = true;
 
-  qt.style = lib.mkForce null;
-  qt.platformTheme = lib.mkForce "qt5ct";
-
-  networking.hostName = "jade-nixos";
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
+  networking.hostName = "jade-macbook";
+  networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   services.flatpak.enable = true;
   services.flatpak.packages = [
@@ -62,12 +40,11 @@
   ];
 
   # Recommended by nixd
-  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+  # nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    zsh
     nixd
   ];
 

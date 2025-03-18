@@ -34,6 +34,7 @@ in
 
       shellAliases = {
         "ls" = "eza --icons --group-directories-first";
+        "cd" = "z";
         "zshsrc" = "source ~/.zshrc";
         "zed" = "zeditor";
         # docker
@@ -57,6 +58,7 @@ in
         eval "$(zoxide init zsh)"
         ${if cfg.enableKeybinds then (builtins.readFile ../../scripts/modules/zsh/keybinds.zsh) else ""}
         ${if cfg.enableDirenv then "eval \"$(direnv hook zsh)\"" else ""}
+        export PATH="/home/jade/.deno/bin:$PATH" # for deno binaries
       '';
     };
   };
