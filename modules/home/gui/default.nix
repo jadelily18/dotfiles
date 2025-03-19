@@ -23,7 +23,6 @@ in
 
   config = lib.mkIf cfg.enable {
     kitty.enable = lib.mkDefault true;
-    gnome-settings.enable = lib.mkDefault true;
     zed.enable = lib.mkDefault true;
   };
 
