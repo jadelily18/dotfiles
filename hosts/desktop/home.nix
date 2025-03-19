@@ -56,6 +56,7 @@
       libsForQt5.qt5ct
       catppuccin-qt5ct
       slack
+      oxipng
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
