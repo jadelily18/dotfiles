@@ -15,4 +15,5 @@ with pkgs;
   bottom
   gitui
   dust
+  hyfetch
 ]

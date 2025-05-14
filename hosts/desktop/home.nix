@@ -55,11 +55,17 @@
       gparted
       packwiz
       blender
-      jetbrains-toolbox
       libsForQt5.qt5ct
       catppuccin-qt5ct
       slack
       oxipng
+      gimp
+      vivaldi
+      recaf-launcher
+      vlc
+      flameshot
+      gradle
+      jetbrains-toolbox
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
@@ -75,6 +81,26 @@
   stylix.targets.gitui.enable = false;
 
   stylix.targets.qt.enable = false;
+
+  services.espanso = {
+    enable = true;
+    package = pkgs.espanso-wayland;
+    configs = {
+      default = {
+        undo_backspace = true;
+      };
+    };
+    matches = {
+      base = {
+        matches = [
+          {
+            trigger = ":mcr";
+            replace = "[Modrinth's Content Rules](https://modrinth.com/legal/rules)";
+          }
+        ];
+      };
+    };
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

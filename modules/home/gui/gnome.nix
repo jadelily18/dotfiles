@@ -27,6 +27,8 @@ in
       "org/gnome/settings-daemon/plugins/media-keys" = {
         custom-keybindings = [
           "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+          # "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
         ];
       };
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
@@ -38,6 +40,11 @@ in
         name = "Kitty Terminal";
         command = "kitty";
         binding = "<Super>T";
+      };
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+        name = "Flameshot";
+        command = "/bin/sh -c \"flameshot gui\" > /dev/null &";
+        binding = "<Super><Shift>s";
       };
 
       "org/gnome/shell".enabled-extensions = [

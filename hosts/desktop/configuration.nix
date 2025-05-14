@@ -44,6 +44,8 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
+  # services.espanso.enable = false;
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -59,6 +61,9 @@
   services.flatpak.enable = true;
   services.flatpak.packages = [
     "app.zen_browser.zen"
+    "io.github.java_decompiler.jd-gui"
+    "org.vinegarhq.Sober"
+    "com.modrinth.ModrinthApp"
   ];
 
   # Recommended by nixd

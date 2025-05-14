@@ -14,4 +14,7 @@ with pkgs;
   ruff
   deno
   bun
+  uv
+  pnpm
+  nodejs
 ]
