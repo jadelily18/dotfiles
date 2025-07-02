@@ -13,7 +13,7 @@ in
     enable = lib.mkEnableOption "Enable git";
 
     signingKey = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "The GPG key to use for signing commits";
     };
   };

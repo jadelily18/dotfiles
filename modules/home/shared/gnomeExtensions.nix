@@ -3,9 +3,9 @@
 with pkgs.gnomeExtensions;
 [
   smile-complementary-extension
-  tray-icons-reloaded
+  # tray-icons-reloaded
+  # appindicator
   pop-shell
   system-monitor
-  reboot2windows
   reboottouefi
 ]

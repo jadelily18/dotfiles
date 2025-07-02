@@ -54,7 +54,7 @@ in
         "gaa" = "git add --all";
       };
 
-      initExtra = ''
+      initContent = ''
         eval "$(zoxide init zsh)"
         ${if cfg.enableKeybinds then (builtins.readFile ../../scripts/modules/zsh/keybinds.zsh) else ""}
         ${if cfg.enableDirenv then "eval \"$(direnv hook zsh)\"" else ""}

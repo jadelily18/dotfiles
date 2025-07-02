@@ -7,7 +7,7 @@
 {
 
   imports = [
-    inputs.self.homeManagerModules.default
+    inputs.self.homeModules.default
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -66,6 +66,9 @@
       flameshot
       gradle
       jetbrains-toolbox
+      audacity
+      obs-studio
+      pkgdiff
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
@@ -87,7 +90,7 @@
     package = pkgs.espanso-wayland;
     configs = {
       default = {
-        undo_backspace = true;
+        undo-backspace = true;
       };
     };
     matches = {
@@ -96,6 +99,30 @@
           {
             trigger = ":mcr";
             replace = "[Modrinth's Content Rules](https://modrinth.com/legal/rules)";
+          }
+          {
+            trigger = ":mrsupport";
+            replace = "[Modrinth's Support Portal](https://support.modrinth.com)";
+          }
+          {
+            trigger = ":mrdelay";
+            replace = "Apologies for the delay, we're currently experiencing a very high volume of projects being submitted, but we're doing our best to get to them as soon as possible!";
+          }
+          {
+            trigger = ":mrfixed";
+            replace = "We have gone ahead and fixed this for your project so it can be approved, thank you!";
+          }
+          {
+            trigger = ":mrinv";
+            replace = "Invalid modpack file";
+          }
+          {
+            trigger = ":mrpriv";
+            replace = "
+---
+Your project is currently unlisted so it's not available publicly, but
+feel free to share the link with others until the issue(s) mentioned
+above are fixed!";
           }
         ];
       };
@@ -109,6 +136,11 @@
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
+
+    "scripts" = {
+      source = ../../files/scripts;
+      recursive = true;
+    };
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''

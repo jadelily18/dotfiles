@@ -21,6 +21,11 @@
     enable = true;
     username = "jade";
     description = "jade lily";
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "docker"
+    ];
   };
 
   xdg.portal.enable = true;
@@ -41,10 +46,10 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
 
-  # services.espanso.enable = false;
+  virtualisation.docker.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -64,6 +69,7 @@
     "io.github.java_decompiler.jd-gui"
     "org.vinegarhq.Sober"
     "com.modrinth.ModrinthApp"
+    "com.usebruno.Bruno"
   ];
 
   # Recommended by nixd

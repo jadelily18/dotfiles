@@ -2,7 +2,7 @@
 
 with pkgs;
 [
-  rustup
+  # rustup
   devenv
   direnv
   nixd
@@ -12,9 +12,12 @@ with pkgs;
   cachix
   python3
   ruff
-  deno
+  # deno
   bun
   uv
   pnpm
   nodejs
+  node-gyp
+  cargo
+  gcc
 ]

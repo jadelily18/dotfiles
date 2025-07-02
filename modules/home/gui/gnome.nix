@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  home,
   ...
 }:
 
@@ -43,13 +44,13 @@ in
       };
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
         name = "Flameshot";
-        command = "/bin/sh -c \"flameshot gui\" > /dev/null &";
+        command = "${config.home.homeDirectory}/scripts/flameshot.sh";
         binding = "<Super><Shift>s";
       };
 
       "org/gnome/shell".enabled-extensions = [
         "smile-extension@mijorus.it"
-        "trayIconsReloaded@selfmade.pl"
+        "appindicatorsupport@rgcjonas.gmail.com"
         "pop-shell@system76.com"
         "system-monitor@gnome-shell-extensions.gcampax.github.com"
         "Reboot2Windows@coooolfan.com"
