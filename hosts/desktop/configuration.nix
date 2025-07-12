@@ -66,6 +66,7 @@
   services.flatpak.enable = true;
   services.flatpak.packages = [
     "app.zen_browser.zen"
+    "com.google.Chrome"
     "io.github.java_decompiler.jd-gui"
     "org.vinegarhq.Sober"
     "com.modrinth.ModrinthApp"
