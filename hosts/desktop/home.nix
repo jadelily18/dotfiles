@@ -69,6 +69,8 @@
       audacity
       obs-studio
       pkgdiff
+      kdePackages.kdenlive
+      ffmpeg
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })

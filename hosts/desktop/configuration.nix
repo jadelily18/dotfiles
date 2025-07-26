@@ -73,6 +73,16 @@
     "com.usebruno.Bruno"
   ];
 
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      5173
+    ];
+    allowedUDPPorts = [
+      5173
+    ];
+  };
+
   # Recommended by nixd
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
