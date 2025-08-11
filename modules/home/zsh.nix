@@ -37,6 +37,7 @@ in
         "cd" = "z";
         "zshsrc" = "source ~/.zshrc";
         "zed" = "zeditor";
+
         # docker
         "dc" = "docker compose";
         "da" = "docker attach";
@@ -45,6 +46,7 @@ in
         "dcps" = "docker compose ps";
         "dlogs" = "docker logs";
         "dclogs" = "docker compose logs";
+
         # git
         "gc" = "git commit";
         "gp" = "git push";
@@ -52,6 +54,8 @@ in
         "gl" = "git log";
         "ga" = "git add";
         "gaa" = "git add --all";
+
+        "nixconf" = "code ~/dotfiles";
       };
 
       initContent = ''

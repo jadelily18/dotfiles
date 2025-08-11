@@ -71,6 +71,7 @@
       pkgdiff
       kdePackages.kdenlive
       ffmpeg
+      telegram-desktop
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })

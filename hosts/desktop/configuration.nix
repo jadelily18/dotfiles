@@ -28,6 +28,13 @@
     ];
   };
 
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
+
   xdg.portal.enable = true;
 
   programs.firefox.enable = true;
@@ -91,6 +98,7 @@
   environment.systemPackages = with pkgs; [
     zsh
     nixd
+    sbctl
   ];
 
   # This value determines the NixOS release from which the default

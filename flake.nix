@@ -2,7 +2,7 @@
   description = "Personal NixOS configs";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -21,6 +21,13 @@
     };
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+
+      # Optional but recommended to limit the size of your system closure.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -32,6 +39,7 @@
       nix-darwin,
       vscode-server,
       stylix,
+      lanzaboote,
       ...
     }@inputs:
     let
@@ -52,7 +60,9 @@
                 nix-flatpak.nixosModules.nix-flatpak
                 home-manager.nixosModules.home-manager
                 {
-                  home-manager.extraSpecialArgs = { inherit inputs; };
+                  home-manager.extraSpecialArgs = {
+                    inherit inputs;
+                  };
                   home-manager.useGlobalPkgs = true;
                   home-manager.useUserPackages = true;
                   home-manager.users.jade = {
@@ -62,11 +72,12 @@
                   };
                   home-manager.backupFileExtension = "backup";
                 }
-              ] ++ extraModules;
+              ]
+              ++ extraModules;
             };
         in
         {
-          desktop = mkNixosConfig "desktop" [ ];
+          desktop = mkNixosConfig "desktop" [ lanzaboote.nixosModules.lanzaboote ];
           game-servers = mkNixosConfig "game-servers" [ vscode-server.nixosModules.default ];
           media = mkNixosConfig "media" [ vscode-server.nixosModules.default ];
           /*
