@@ -35,6 +35,10 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
+  boot.plymouth = {
+    enable = true;
+  };
+
   xdg.portal.enable = true;
 
   programs.firefox.enable = true;
