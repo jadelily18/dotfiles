@@ -28,6 +28,8 @@
     ];
   };
 
+  nix.optimise.automatic = true;
+
   boot.loader.systemd-boot.enable = lib.mkForce false;
 
   boot.lanzaboote = {
@@ -53,8 +55,11 @@
   networking.hostName = "jade-nixos";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
+  # Should probably be in hardware-configuration.nix, but permission issues that I don't want to deal with rn
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
   # Enable the GNOME Desktop Environment.
   services.desktopManager.gnome.enable = true;
@@ -103,6 +108,7 @@
     zsh
     nixd
     sbctl
+    clinfo
   ];
 
   # This value determines the NixOS release from which the default

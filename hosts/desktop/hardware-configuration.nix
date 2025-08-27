@@ -5,6 +5,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 
@@ -21,7 +22,7 @@
     "usb_storage"
     "sd_mod"
   ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
@@ -31,11 +32,21 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/C6EF-B0DA";
+    device = "/dev/disk/by-uuid/DB40-B05C";
     fsType = "vfat";
     options = [
       "fmask=0077"
       "dmask=0077"
+    ];
+  };
+
+  hardware.graphics = {
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      rocmPackages.clr.icd
+    ];
+    extraPackages32 = with pkgs; [
+      driversi686Linux.amdvlk
     ];
   };
 
