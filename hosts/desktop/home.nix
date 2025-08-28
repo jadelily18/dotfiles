@@ -24,6 +24,8 @@
   # release notes.
   home.stateVersion = "24.11"; # Please read the comment before changing.
 
+  wayland.windowManager.hyprland.enable = true;
+
   # Custom GNOME configuration
   gnome-settings.enable = true;
 
