@@ -26,6 +26,9 @@
 
   wayland.windowManager.hyprland.enable = true;
 
+  programs.waybar.enable = true;
+  programs.foot.enable = true;
+
   # Custom GNOME configuration
   gnome-settings.enable = true;
 

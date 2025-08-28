@@ -49,8 +49,6 @@
     enable = true;
   };
 
-  xdg.portal.enable = true;
-
   programs.firefox.enable = true;
 
   programs.steam.enable = true;
@@ -61,9 +59,6 @@
   qt.platformTheme = lib.mkForce "qt5ct";
 
   networking.hostName = "jade-nixos";
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Should probably be in hardware-configuration.nix, but permission issues that I don't want to deal with rn
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -72,6 +67,9 @@
   # Enable the GNOME Desktop Environment.
   services.desktopManager.gnome.enable = true;
   services.displayManager.gdm.enable = true;
+  services.displayManager.gdm.wayland = true;
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
 
   virtualisation.docker.enable = true;
 
