@@ -38,6 +38,7 @@
 
   nix.optimise.automatic = true;
 
+  boot.kernelParams = [ "systemd.gpt_auto=0" ];
   boot.loader.systemd-boot.enable = lib.mkForce false;
 
   boot.lanzaboote = {
@@ -68,6 +69,7 @@
   services.desktopManager.gnome.enable = true;
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true;
+  services.displayManager.sessionPackages = [ pkgs.hyprland ];
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
 
@@ -115,6 +117,7 @@
     nixd
     sbctl
     clinfo
+    # hyprland
   ];
 
   # This value determines the NixOS release from which the default
