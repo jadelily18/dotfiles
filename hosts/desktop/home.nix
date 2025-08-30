@@ -52,6 +52,8 @@
         "$mod SHIFT,S,exec,${config.home.homeDirectory}/scripts/flameshot.sh" # TODO: Not working currently
         "$mod SHIFT,F,exec,nautilus"
         "$mod SHIFT,V,exec,vesktop"
+        "$mod SHIFT,P,exec,1password"
+        "$mod SHIFT,O,exec,1password --quick-access"
 
         ## Window/workspace management
         "$mod, Q, killactive"
