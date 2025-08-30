@@ -2,7 +2,6 @@
   inputs,
   pkgs,
   lib,
-  config,
   ...
 }:
 
@@ -36,6 +35,7 @@
         "DP-3, 2560x1440@144, 0x0, 1" # main display
         "DP-1, 2560x1440@60, 2560x0, 1" # right display
         "HDMI-A-1, 2560x1440@60, -2560x0, 1" # left display
+        ", preferred, auto, 1" # for any other display, set preferred resolution and place on the right
       ];
       env = [
         "NIXOS_OZONE_WL,1"
@@ -46,10 +46,14 @@
         "XCURSOR_SIZE,24"
       ];
       bind = [
-        ## Apps
+        ## Basic system stuff
         "$mod,T,exec,kitty"
+        "$mod,Semicolon,exec,smile" # Emoji picker
         "$mod,Space,exec,rofi -show drun"
-        "$mod SHIFT,S,exec,${config.home.homeDirectory}/scripts/flameshot.sh" # TODO: Not working currently
+        "$mod SHIFT,S,exec,grim -g \"$(slurp)\" - | swappy -f -" # Screenshots
+        "$mod SHIFT,R,exec,kooha"
+
+        ## Apps
         "$mod SHIFT,F,exec,nautilus"
         "$mod SHIFT,V,exec,vesktop"
         "$mod SHIFT,P,exec,1password"
@@ -58,6 +62,11 @@
         ## Window/workspace management
         "$mod, Q, killactive"
         "$mod, F, fullscreen"
+        "$mod, I, togglefloating"
+
+        # Cycle windows
+        "$mod,       TAB, cyclenext"
+        "$mod SHIFT, TAB, cyclenext, prev"
 
         # Focus
         "$mod, LEFT,  movefocus, l"
@@ -184,6 +193,10 @@
       hyprpicker
       hyprcursor
       rose-pine-hyprcursor
+      grim
+      slurp
+      swappy
+      kooha
       # libs for hyprland
       qt5.qtwayland
       qt6.qtwayland
