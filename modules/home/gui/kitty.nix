@@ -13,6 +13,10 @@ in
       default = false;
       description = "Enable kitty terminal";
     };
+    useX11 = lib.mkEnableOption {
+      default = true;
+      description = "Use X11 instead of Wayland";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -47,7 +51,7 @@ in
         font_size = 12.0;
         opacity = 0.2;
 
-        linux_display_server = "X11";
+        linux_display_server = lib.mkIf cfg.useX11 "X11";
 
         kitty_mod = "ctrl";
 

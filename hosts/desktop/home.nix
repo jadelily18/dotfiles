@@ -1,6 +1,8 @@
 {
   inputs,
   pkgs,
+  lib,
+  config,
   ...
 }:
 
@@ -24,10 +26,102 @@
   # release notes.
   home.stateVersion = "24.11"; # Please read the comment before changing.
 
-  wayland.windowManager.hyprland.enable = true;
+  wayland.windowManager.hyprland = {
+    enable = true;
+    systemd.variables = [ "--all" ];
+    settings = {
+      "$mod" = "SUPER";
+      "$terminal" = "kitty";
+      monitor = [
+        "DP-3, 2560x1440@144, 0x0, 1" # main display
+        "DP-1, 2560x1440@60, 2560x0, 1" # right display
+        "HDMI-A-1, 2560x1440@60, -2560x0, 1" # left display
+      ];
+      env = [
+        "NIXOS_OZONE_WL,1"
+        "ELECTRON_OZONE_PLATFORM_HINT,wayland"
+        "HYPRCURSOR_THEME,rose-pine-hyprcursor"
+        "HYPRCURSOR_SIZE,24"
+        "XCURSOR_THEME,rose-pine-hyprcursor"
+        "XCURSOR_SIZE,24"
+      ];
+      bind = [
+        ## Apps
+        "$mod,T,exec,kitty"
+        "$mod,Space,exec,rofi -show drun"
+        "$mod SHIFT,S,exec,${config.home.homeDirectory}/scripts/flameshot.sh" # TODO: Not working currently
+        "$mod SHIFT,F,exec,nautilus"
+        "$mod SHIFT,V,exec,vesktop"
+
+        ## Window/workspace management
+        "$mod, Q, killactive"
+        "$mod, F, fullscreen"
+
+        # Focus
+        "$mod, LEFT,  movefocus, l"
+        "$mod, RIGHT, movefocus, r"
+        "$mod, UP,    movefocus, u"
+        "$mod, DOWN,  movefocus, d"
+
+        # Move windows
+        "$mod SHIFT, LEFT,  movewindow, l"
+        "$mod SHIFT, RIGHT, movewindow, r"
+        "$mod SHIFT, UP,    movewindow, u"
+        "$mod SHIFT, DOWN,  movewindow, d"
+
+        # Workspace navigation
+        "$mod, 1, workspace, 1"
+        "$mod, 2, workspace, 2"
+        "$mod, 3, workspace, 3"
+        "$mod, 4, workspace, 4"
+        "$mod, 5, workspace, 5"
+        "$mod, 6, workspace, 6"
+        "$mod, 7, workspace, 7"
+        "$mod, 8, workspace, 8"
+        "$mod, 9, workspace, 9"
+        "$mod, 0, workspace, 10"
+
+        # Move focused window to workspace
+        "$mod SHIFT, 1, movetoworkspace, 1"
+        "$mod SHIFT, 2, movetoworkspace, 2"
+        "$mod SHIFT, 3, movetoworkspace, 3"
+        "$mod SHIFT, 4, movetoworkspace, 4"
+        "$mod SHIFT, 5, movetoworkspace, 5"
+        "$mod SHIFT, 6, movetoworkspace, 6"
+        "$mod SHIFT, 7, movetoworkspace, 7"
+        "$mod SHIFT, 8, movetoworkspace, 8"
+        "$mod SHIFT, 9, movetoworkspace, 9"
+        "$mod SHIFT, 0, movetoworkspace, 10"
+      ];
+      exec-once = [
+        "swaync"
+        "systemctl --user start hyprpolkitagent"
+        "waybar"
+        "foot"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
+      ];
+      cursor.enable_hyprcursor = true;
+      decoration = {
+        rounding = 12;
+        active_opacity = 0.9;
+        inactive_opacity = 0.8;
+        fullscreen_opacity = 0.9;
+
+        blur = {
+          enabled = true;
+          xray = true;
+          size = 16;
+        };
+      };
+    };
+  };
 
   programs.waybar.enable = true;
   programs.foot.enable = true;
+
+  programs.kitty.enable = lib.mkForce true;
+  kitty.useX11 = false;
 
   # Custom GNOME configuration
   gnome-settings.enable = true;
@@ -68,7 +162,9 @@
       vivaldi
       recaf-launcher
       vlc
-      flameshot
+      (flameshot.overrideAttrs (old: {
+        cmakeFlags = old.cmakeFlags or [ ] ++ [ "-DUSE_WAYLAND_GRIM=ON" ];
+      }))
       gradle
       jetbrains-toolbox
       audacity
@@ -77,6 +173,18 @@
       kdePackages.kdenlive
       ffmpeg
       telegram-desktop
+      #! Hyprland stuff
+      swaynotificationcenter
+      hyprpolkitagent
+      rofi-wayland
+      cliphist
+      nautilus
+      hyprpicker
+      hyprcursor
+      rose-pine-hyprcursor
+      # libs for hyprland
+      qt5.qtwayland
+      qt6.qtwayland
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
