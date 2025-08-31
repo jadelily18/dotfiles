@@ -1,0 +1,28 @@
+* {
+	font-family: "JetBrainsMono Nerd Font";
+}
+
+window#waybar {
+	background: transparent;
+	border: none;
+	padding: 20px 0;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+	background: rgba(30, 30, 46, 0.9);
+	border: 1px solid rgb(245, 194, 231);
+	border-radius: 20px;
+}
+
+tooltip {
+	background: rgba(30, 30, 46, 0.9);
+	border: 1px solid rgba(49, 50, 68, 0.9);
+	border-radius: 12px;
+}
+
+#clock {
+	background: transparent;
+	color: currentColor;
+}

@@ -128,7 +128,40 @@
     };
   };
 
-  programs.waybar.enable = true;
+  programs.waybar = {
+    enable = true;
+    settings = {
+      mainBar = {
+        height = 38;
+        modules-left = [
+          "hyprland/workspaces"
+          "hyprland/window"
+        ];
+        modules-center = [ "clock" ];
+        modules-right = [
+          "pulseaudio"
+          "network"
+          "tray"
+        ];
+        clock = {
+          format = "{:%r} ";
+          format-alt = "{:%A, %B %d, %Y (%R)} ";
+
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
+
+          calendar = {
+            week-pos = "left";
+          };
+
+          actions = {
+            on-click-right = "mode";
+          };
+        };
+      };
+    };
+
+    style = builtins.readFile ../../files/styles/waybar.css;
+  };
   programs.foot.enable = true;
 
   programs.kitty.enable = lib.mkForce true;
