@@ -32,26 +32,27 @@
       "$mod" = "SUPER";
       "$terminal" = "kitty";
       monitor = [
-        "DP-3, 2560x1440@144, 0x0, 1" # main display
-        "DP-1, 2560x1440@60, 2560x0, 1" # right display
-        "HDMI-A-1, 2560x1440@60, -2560x0, 1" # left display
-        ", preferred, auto, 1" # for any other display, set preferred resolution and place on the right
+        "DP-3,     2560x1440@144, 0x0,     1" # main display
+        "DP-1,     2560x1440@60,  2560x0,  1" # right display
+        "HDMI-A-1, 2560x1440@60,  -2560x0, 1" # left display
+        ",         preferred,     auto,    1" # for any other display, set preferred resolution and place on the right
       ];
       env = [
-        "NIXOS_OZONE_WL,1"
-        "ELECTRON_OZONE_PLATFORM_HINT,wayland"
-        "HYPRCURSOR_THEME,rose-pine-hyprcursor"
-        "HYPRCURSOR_SIZE,24"
-        "XCURSOR_THEME,rose-pine-hyprcursor"
-        "XCURSOR_SIZE,24"
+        "NIXOS_OZONE_WL,               1"
+        "ELECTRON_OZONE_PLATFORM_HINT, wayland"
+        "HYPRCURSOR_THEME,             rose-pine-hyprcursor"
+        "XCURSOR_THEME,                rose-pine-hyprcursor"
+        "HYPRCURSOR_SIZE,              24"
+        "XCURSOR_SIZE,                 24"
       ];
       bind = [
         ## Basic system stuff
-        "$mod,T,exec,kitty"
-        "$mod,Semicolon,exec,smile" # Emoji picker
-        "$mod,Space,exec,rofi -show drun"
-        "$mod SHIFT,S,exec,grim -g \"$(slurp)\" - | swappy -f -" # Screenshots
-        "$mod SHIFT,R,exec,kooha"
+        "$mod,       T,         exec, kitty"
+        "$mod,       Semicolon, exec, smile" # Emoji picker
+        "$mod,       E,         exec, rofi -modi emoji -show emoji" # Better emoji picker
+        "$mod,       Space,     exec, rofi -show drun"
+        "$mod SHIFT, S,         exec, grim -g \"$(slurp)\" - | swappy -f -" # Screenshots
+        "$mod SHIFT, R,         exec, kooha"
 
         ## Apps
         "$mod SHIFT,F,exec,nautilus"
@@ -81,6 +82,9 @@
         "$mod SHIFT, DOWN,  movewindow, d"
 
         # Workspace navigation
+        "$mod CTRL, LEFT,  workspace, e-1" # Previous workspace (by number)
+        "$mod CTRL, RIGHT, workspace, e+1" # Next Workspace (by number)
+
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
         "$mod, 3, workspace, 3"
@@ -107,8 +111,7 @@
       exec-once = [
         "swaync"
         "systemctl --user start hyprpolkitagent"
-        "waybar"
-        "foot"
+        "hyprpanel"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
       ];
@@ -128,41 +131,162 @@
     };
   };
 
-  programs.waybar = {
+  # programs.waybar = {
+  #   enable = false;
+  #   settings = {
+  #     mainBar = {
+  #       height = 38;
+  #       modules-left = [
+  #         "hyprland/workspaces"
+  #         "hyprland/window"
+  #       ];
+  #       modules-center = [ "clock" ];
+  #       modules-right = [
+  #         "pulseaudio"
+  #         "network"
+  #         "tray"
+  #       ];
+  #       clock = {
+  #         format = "{:%r} ";
+  #         format-alt = "{:%A, %B %d, %Y (%R)} ";
+
+  #         tooltip-format = "<tt><small>{calendar}</small></tt>";
+
+  #         calendar = {
+  #           week-pos = "left";
+  #         };
+
+  #         actions = {
+  #           on-click-right = "mode";
+  #         };
+  #       };
+  #     };
+  #   };
+  #   style = builtins.readFile ../../files/styles/waybar.css;
+  # };
+
+  # I should just use AGS
+  programs.hyprpanel = {
     enable = true;
     settings = {
-      mainBar = {
-        height = 38;
-        modules-left = [
-          "hyprland/workspaces"
-          "hyprland/window"
-        ];
-        modules-center = [ "clock" ];
-        modules-right = [
-          "pulseaudio"
-          "network"
-          "tray"
-        ];
-        clock = {
-          format = "{:%r} ";
-          format-alt = "{:%A, %B %d, %Y (%R)} ";
+      scalingPriority = "gdk";
 
-          tooltip-format = "<tt><small>{calendar}</small></tt>";
-
-          calendar = {
-            week-pos = "left";
+      menus = {
+        transitionTime = 100;
+        volume.raiseMaximumVolume = true;
+        media = {
+          displayTimeTooltip = true;
+          noMediaText = "No media playing...";
+        };
+        dashboard = {
+          # powermenu.avatar.image = "IMAGE PATH :3";
+          controls.enabled = true;
+          directories.enabled = false;
+          shortcuts.left = {
+            shortcut1 = {
+              icon = "";
+              tooltip = "Zen Browser";
+              command = "flatpak run app.zen_browser.zen";
+            };
+            shortcut3 = {
+              tooltip = "Discord (vesktop)";
+              command = "vesktop";
+            };
           };
+        };
+      };
 
-          actions = {
-            on-click-right = "mode";
+      bar = {
+        launcher.autoDetectIcon = true;
+        notifications.show_total = true;
+        clock = {
+          icon = "";
+          format = "%I:%M:%S %p";
+          showTime = true;
+        };
+        workspaces = {
+          show_icons = false;
+          show_numbered = true;
+          monitorSpecific = true;
+          numbered_active_indicator = "highlight";
+        };
+      };
+
+      notifications = {
+        monitor = 1;
+        activeMonitor = false;
+        autoDismiss = true;
+        clearDelay = 2000;
+      };
+
+      theme = {
+        font = {
+          weight = 800;
+          size = "0.85rem";
+        };
+        osd = {
+          monitor = 1;
+          muted_zero = true;
+          radius = "9999px";
+        };
+        notification = {
+          opacity = 95;
+          border_radius = "1.55em";
+        };
+        bar = {
+          layer = "top";
+          transparent = true;
+          border.width = "0.15em";
+          buttons = {
+            opacity = 85;
+            radius = "9999px";
+            borderSize = "0.1em";
+            volume.enableBorder = false;
+            windowTitle.enableBorder = false;
+            notifications.enableBorder = true;
+            workspaces = {
+              numbered_active_highlight_border = "9999px";
+              numbered_active_highlight_padding = "0.5em";
+            };
+          };
+          menus = {
+            opacity = 95;
+            card_radius = "1.25em";
+            tooltip.radius = "1.35em";
+            border.radius = "1.55em";
+            popover.radius = "1.55em";
+            buttons.radius = "9999px";
+            progressbar.radius = "9999px";
+            slider = {
+              slider_radius = "9999px";
+              progress_radius = "9999px";
+            };
+            switch = {
+              radius = "9999px";
+              slider_radius = "9999px";
+            };
+            menu.dashboard.profiles = {
+              size = "7.5em";
+              radius = "9999px";
+            };
           };
         };
       };
     };
-
-    style = builtins.readFile ../../files/styles/waybar.css;
   };
-  programs.foot.enable = true;
+
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi-wayland;
+    plugins = [ pkgs.rofi-emoji-wayland ];
+  };
+
+  # home.activation.ewwReopenExisting = lib.hm.dag.entryAfter [ "restartUserUnits" ] ''
+  #   pgrep -x eww >/dev/null || ${pkgs.eww}/bin/eww daemon
+  #   ${pkgs.coreutils}/bin/sleep 0.2
+  #   W="$(${pkgs.eww}/bin/eww active-windows 2>/dev/null || ${pkgs.eww}/bin/eww windows 2>/dev/null || true)"
+  #   [ -n "$W" ] && { ${pkgs.eww}/bin/eww close-many $W; ${pkgs.eww}/bin/eww open-many $W; }
+  # '';
 
   programs.kitty.enable = lib.mkForce true;
   kitty.useX11 = false;
@@ -220,7 +344,6 @@
       #! Hyprland stuff
       swaynotificationcenter
       hyprpolkitagent
-      rofi-wayland
       cliphist
       nautilus
       hyprpicker
