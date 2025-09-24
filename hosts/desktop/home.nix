@@ -266,6 +266,7 @@
         window = {
           border = 1;
           border-color = mkLiteral "rgb(49, 50, 68)";
+          width = mkLiteral "30%";
         };
 
         element = {
