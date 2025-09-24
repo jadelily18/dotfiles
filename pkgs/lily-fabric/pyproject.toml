@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lily-fabric"
+version = "0.1.0"
+requires-python = ">= 3.11"
+authors = []
+maintainers = []
+description = "Jade's Fabric configuration."
+readme = "README.md"
+license = { file = "../../LICENSE" }
+
+[project.scripts]
+bar = "bar.bar:main"
+
+[tool.setuptools]
+packages = ["bar"]
+
+[tool.setuptools.package-data]
+bar = ["style.css"]

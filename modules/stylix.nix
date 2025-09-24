@@ -1,5 +1,6 @@
 {
   pkgs,
+  myPkgs,
   lib,
   config,
   ...
@@ -17,7 +18,7 @@ in
     stylix = {
       enable = true;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-      image = ../files/nixos-mocha-wallpaper.png;
+      image = ../files/wallpapers/rayquaza_catppuccin.png;
 
       fonts = {
         serif = config.stylix.fonts.sansSerif;
@@ -30,6 +31,11 @@ in
         monospace = {
           name = "JetBrainsMono Nerd Font";
           package = pkgs.nerd-fonts.jetbrains-mono;
+        };
+
+        emoji = {
+          name = "Fluent Emoji Color";
+          package = myPkgs.fluent-emoji-webfont-color;
         };
       };
     };

@@ -9,6 +9,7 @@
 
   imports = [
     inputs.self.homeModules.default
+    inputs.ags.homeManagerModules.default
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -50,9 +51,11 @@
         "$mod,       T,         exec, kitty"
         "$mod,       Semicolon, exec, smile" # Emoji picker
         "$mod,       E,         exec, rofi -modi emoji -show emoji" # Better emoji picker
-        "$mod,       Space,     exec, rofi -show drun"
-        "$mod SHIFT, S,         exec, grim -g \"$(slurp)\" - | swappy -f -" # Screenshots
+        "$mod,       Space,     exec, rofi -show drun" # App launcher
+        "$mod SHIFT, C,         exec, hyprpicker -a" # Color picker
+        "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
         "$mod SHIFT, R,         exec, kooha"
+        "$mod SHIFT, Z,         exec, flatpak run app.zen_browser.zen"
 
         ## Apps
         "$mod SHIFT,F,exec,nautilus"
@@ -117,10 +120,10 @@
       ];
       cursor.enable_hyprcursor = true;
       decoration = {
-        rounding = 12;
+        rounding = 16;
         active_opacity = 0.9;
         inactive_opacity = 0.8;
-        fullscreen_opacity = 0.9;
+        fullscreen_opacity = 1.0;
 
         blur = {
           enabled = true;
@@ -131,41 +134,6 @@
     };
   };
 
-  # programs.waybar = {
-  #   enable = false;
-  #   settings = {
-  #     mainBar = {
-  #       height = 38;
-  #       modules-left = [
-  #         "hyprland/workspaces"
-  #         "hyprland/window"
-  #       ];
-  #       modules-center = [ "clock" ];
-  #       modules-right = [
-  #         "pulseaudio"
-  #         "network"
-  #         "tray"
-  #       ];
-  #       clock = {
-  #         format = "{:%r} ";
-  #         format-alt = "{:%A, %B %d, %Y (%R)} ";
-
-  #         tooltip-format = "<tt><small>{calendar}</small></tt>";
-
-  #         calendar = {
-  #           week-pos = "left";
-  #         };
-
-  #         actions = {
-  #           on-click-right = "mode";
-  #         };
-  #       };
-  #     };
-  #   };
-  #   style = builtins.readFile ../../files/styles/waybar.css;
-  # };
-
-  # I should just use AGS
   programs.hyprpanel = {
     enable = true;
     settings = {
@@ -277,22 +245,16 @@
 
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
-    plugins = [ pkgs.rofi-emoji-wayland ];
+    plugins = [ pkgs.rofi-emoji ];
   };
-
-  # home.activation.ewwReopenExisting = lib.hm.dag.entryAfter [ "restartUserUnits" ] ''
-  #   pgrep -x eww >/dev/null || ${pkgs.eww}/bin/eww daemon
-  #   ${pkgs.coreutils}/bin/sleep 0.2
-  #   W="$(${pkgs.eww}/bin/eww active-windows 2>/dev/null || ${pkgs.eww}/bin/eww windows 2>/dev/null || true)"
-  #   [ -n "$W" ] && { ${pkgs.eww}/bin/eww close-many $W; ${pkgs.eww}/bin/eww open-many $W; }
-  # '';
 
   programs.kitty.enable = lib.mkForce true;
   kitty.useX11 = false;
 
   # Custom GNOME configuration
   gnome-settings.enable = true;
+
+  services.gnome-keyring.enable = true;
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -303,7 +265,15 @@
       kitty
       _1password-cli
       _1password-gui
-      vscode
+      (symlinkJoin {
+        name = "vscode-wrapped-libsecret";
+        paths = [ vscode ];
+        buildInputs = [ makeWrapper ];
+        postBuild = ''
+          		wrapProgram $out/bin/code \
+          		--add-flags "--password-store=gnome-libsecret"
+        '';
+      })
       nixfmt-rfc-style
       xclip
       nixos-generators
@@ -341,6 +311,9 @@
       kdePackages.kdenlive
       ffmpeg
       telegram-desktop
+      element-desktop
+      bitwig-studio
+      appflowy
       #! Hyprland stuff
       swaynotificationcenter
       hyprpolkitagent
@@ -350,12 +323,16 @@
       hyprcursor
       rose-pine-hyprcursor
       grim
+      grimblast
       slurp
       swappy
       kooha
+      # ags
       # libs for hyprland
       qt5.qtwayland
       qt6.qtwayland
+      wl-clipboard
+      gnome-keyring
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
@@ -393,7 +370,7 @@
           }
           {
             trigger = ":mrdelay";
-            replace = "Apologies for the delay, we're currently experiencing a very high volume of projects being submitted, but we're doing our best to get to them as soon as possible!";
+            replace = "Apologies for the delay; we're doing our best to get to all projects as soon as possible!";
           }
           {
             trigger = ":mrfixed";

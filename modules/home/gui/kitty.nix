@@ -55,6 +55,7 @@ in
 
         kitty_mod = "ctrl";
 
+        window_padding_width = 4;
       };
     };
   };

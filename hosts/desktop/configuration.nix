@@ -72,6 +72,15 @@
     ];
   };
 
+  security.pam.services = {
+    gdm.enableGnomeKeyring = true;
+  };
+
+  services.dbus.packages = with pkgs; [
+    gnome-keyring
+    libsecret
+  ];
+
   virtualisation.docker.enable = true;
 
   # Configure keymap in X11
@@ -116,6 +125,7 @@
     nixd
     sbctl
     clinfo
+    libsecret
   ];
 
   # This value determines the NixOS release from which the default

@@ -4,6 +4,17 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
+    astal = {
+      url = "github:aylur/astal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ags = {
+      url = "github:aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.astal.follows = "astal";
+    };
+
     hyprland.url = "github:hyprwm/Hyprland";
 
     rose-pine-hyprcursor = {
@@ -35,6 +46,8 @@
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,6 +56,7 @@
 
   outputs =
     {
+      self,
       nixpkgs,
       home-manager,
       nix-flatpak,
@@ -50,6 +64,7 @@
       nix-darwin,
       vscode-server,
       stylix,
+      flake-utils,
       lanzaboote,
       disko,
       ...
@@ -74,7 +89,10 @@
               extraModules ? [ ],
             }:
             nixpkgs.lib.nixosSystem {
-              specialArgs = { inherit inputs; };
+              specialArgs = {
+                inherit inputs;
+                myPkgs = inputs.self.packages.${system};
+              };
               inherit system;
               modules = [
                 ./hosts/${name}/configuration.nix
@@ -84,6 +102,7 @@
                 {
                   home-manager.extraSpecialArgs = {
                     inherit inputs;
+                    myPkgs = inputs.self.packages.${system};
                   };
                   home-manager.useGlobalPkgs = true;
                   home-manager.useUserPackages = true;
@@ -156,5 +175,66 @@
       };
 
       homeModules.default = ./modules/home;
-    };
+    }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+        py = pkgs.python313;
+        pypkgs = py.pkgs;
+
+        fluent-emoji-webfont = import ./pkgs/fluent-emoji-webfont/default.nix { inherit pkgs; };
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          # buildInputs = with pkgs; [
+
+          # ];
+          nativeBuildInputs = with pkgs; [
+            ruff
+            basedpyright
+
+            gtk3
+            gtk-layer-shell
+            cairo
+            gobject-introspection
+            libdbusmenu-gtk3
+            gdk-pixbuf
+            gnome-bluetooth
+            cinnamon-desktop
+            (py.withPackages (
+              ps: with ps; [
+                setuptools
+                wheel
+                build
+                (inputs.self.packages.${system}.python-fabric)
+              ]
+            ))
+          ];
+        };
+
+        packages = {
+          python-fabric = pkgs.callPackage ./pkgs/fabric/derivation.nix { inherit pypkgs pkgs lib; };
+          lily-fabric = pkgs.callPackage ./pkgs/lily-fabric/derivation.nix {
+            inherit pypkgs pkgs;
+            python-fabric = (inputs.self.packages.${system}.python-fabric);
+          };
+        }
+        // (lib.mapAttrs' (name: value: {
+          name = "fluent-emoji-webfont-${name}";
+          value = value;
+        }) fluent-emoji-webfont);
+
+        apps.lily-fabric = {
+          type = "app";
+          program = "${self.packages.${system}.lily-fabric}/bin/bar";
+          meta = {
+            changelog = "";
+            description = "jade's fabric configuration";
+          };
+        };
+      }
+    );
 }
