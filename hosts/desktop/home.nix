@@ -1,5 +1,6 @@
 {
   inputs,
+  config,
   pkgs,
   lib,
   ...
@@ -49,8 +50,8 @@
         ## Basic system stuff
         "$mod,       T,         exec, kitty"
         "$mod,       Semicolon, exec, smile" # Emoji picker
-        "$mod,       E,         exec, rofi -modi emoji -show emoji" # Better emoji picker
-        "$mod,       Space,     exec, rofi -show drun" # App launcher
+        "$mod,       E,         exec, rofimoji -r 💖 --use-icons" # Better emoji picker
+        "$mod,       Space,     exec, rofi -show drun -show-icons" # App launcher
         "$mod SHIFT, C,         exec, hyprpicker -a" # Color picker
         "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
         "$mod SHIFT, R,         exec, kooha"
@@ -244,7 +245,43 @@
 
   programs.rofi = {
     enable = true;
-    plugins = [ pkgs.rofi-emoji ];
+    plugins = with pkgs; [ rofi-emoji ];
+    theme =
+      let
+        inherit (config.lib.formats.rasi) mkLiteral;
+      in
+      {
+        configuration = {
+          show-icons = true;
+        };
+
+        "*" = {
+          border-radius = 18;
+          padding = 4;
+          font = "Inter";
+
+          opacity = lib.mkForce (mkLiteral "85%");
+
+          selected-normal-background = lib.mkForce (mkLiteral "#f5c2e7");
+        };
+
+        window = {
+          border = 1;
+          border-color = mkLiteral "rgb(49, 50, 68)";
+        };
+
+        element = {
+          border-radius = mkLiteral "100%";
+        };
+
+        element-icon = {
+          size = 24;
+        };
+
+        "element-icon selected.normal" = {
+          background-color = mkLiteral "rgb(30, 30, 46)";
+        };
+      };
   };
 
   programs.kitty.enable = lib.mkForce true;
@@ -326,6 +363,7 @@
       slurp
       swappy
       kooha
+      rofimoji
       # libs for hyprland
       qt5.qtwayland
       qt6.qtwayland
@@ -344,7 +382,6 @@
 
   # gitui's theming is kinda broken
   stylix.targets.gitui.enable = false;
-
   stylix.targets.qt.enable = false;
 
   services.espanso = {
