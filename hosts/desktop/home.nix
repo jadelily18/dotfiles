@@ -9,7 +9,6 @@
 
   imports = [
     inputs.self.homeModules.default
-    inputs.ags.homeManagerModules.default
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -327,7 +326,6 @@
       slurp
       swappy
       kooha
-      # ags
       # libs for hyprland
       qt5.qtwayland
       qt6.qtwayland
