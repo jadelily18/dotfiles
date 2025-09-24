@@ -51,7 +51,7 @@
         "$mod,       T,         exec, kitty"
         "$mod,       Semicolon, exec, smile" # Emoji picker
         "$mod,       E,         exec, rofimoji -r 💖 --use-icons" # Better emoji picker
-        "$mod,       Space,     exec, rofi -show drun -show-icons" # App launcher
+        "$mod,       Space,     exec, rofi -show drun -display-drun ♥ -show-icons" # App launcher
         "$mod SHIFT, C,         exec, hyprpicker -a" # Color picker
         "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
         "$mod SHIFT, R,         exec, kooha"
@@ -259,8 +259,6 @@
           border-radius = 18;
           padding = 4;
           font = "Inter";
-
-          opacity = lib.mkForce (mkLiteral "85%");
 
           selected-normal-background = lib.mkForce (mkLiteral "#f5c2e7");
         };
