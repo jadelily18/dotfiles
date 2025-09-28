@@ -4,7 +4,6 @@ import sqlite3
 import sys
 import tempfile
 import time
-import base64
 import hashlib
 from pathlib import Path
 from typing import List, Tuple, Optional, Dict
