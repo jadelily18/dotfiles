@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rofi-bookmarks-zen"
+version = "0.1.0"
+requires-python = ">= 3.13"
+description = "Implementation for grabbing Zen bookmarks in rofi."
+license = { file = "../../LICENSE" }
+
+[project.scripts]
+main = "main:main"
+
+# [tool.setuptools]
+# packages = ["main"]
+
+# [tool.setuptools.package-data]
+# bar = ["style.css"]

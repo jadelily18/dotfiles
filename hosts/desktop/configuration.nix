@@ -9,6 +9,32 @@
   ...
 }:
 
+let
+  wallpaperPath = ../../files/wallpapers/rayquaza_catppuccin.png;
+  wallpaperName = builtins.baseNameOf wallpaperPath;
+  wallpaper = pkgs.runCommand wallpaperName { } ''
+    local_path=${wallpaperPath}
+    cp "$local_path" "$out" 
+  '';
+  sddm-theme = inputs.silentSDDM.packages.${pkgs.system}.default.override {
+    # theme = "rei";
+    extraBackgrounds = [ wallpaper ];
+
+    theme-overrides = {
+      "LoginScreen" = {
+        background = "${wallpaperName}";
+      };
+
+      "LockScreen" = {
+        background = "${wallpaperName}";
+      };
+    };
+  };
+  sddm-theme-pkgs = [
+    sddm-theme
+    sddm-theme.test
+  ];
+in
 {
   imports = [
     # Include the results of the hardware scan.
@@ -32,16 +58,31 @@
 
   nix.optimise.automatic = true;
 
-  boot.kernelParams = [ "systemd.gpt_auto=0" ];
-  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot = {
+    kernelParams = [
+      "systemd.gpt_auto=0"
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+    ];
+    loader.systemd-boot = {
+      enable = lib.mkForce false;
+      consoleMode = "1";
+    };
 
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/var/lib/sbctl";
-  };
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
 
-  boot.plymouth = {
-    enable = true;
+    plymouth = {
+      enable = true;
+    };
+
+    consoleLogLevel = 3;
+    initrd.verbose = false;
   };
 
   programs.firefox.enable = true;
@@ -59,10 +100,30 @@
   services.xserver.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
-  # Enable the GNOME Desktop Environment.
-  services.desktopManager.gnome.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.displayManager.gdm.wayland = true;
+  qt.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    package = pkgs.kdePackages.sddm;
+    theme = sddm-theme.pname;
+    extraPackages = sddm-theme.propagatedBuildInputs;
+
+    settings = {
+      General = {
+        GreeterEnvironment = "QML2_IMPORT_PATH=${sddm-theme}/share/sddm/themes/${sddm-theme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
+        # InputMethod = "qtvirtualkeyboard";
+      };
+    };
+  };
+
+  services.xserver.displayManager.setupCommands = ''
+    X_RANDR="${lib.getExe pkgs.xorg.xrandr}"
+
+    $X_RANDR --output DisplayPort-0 --off
+    $X_RANDR --output HDMI-A-0 --off
+
+    $X_RANDR --output DisplayPort-2 --primary --mode 2560x1440
+  '';
+
   services.displayManager.sessionPackages = [ pkgs.hyprland ];
   xdg.portal = {
     enable = true;
@@ -73,7 +134,8 @@
   };
 
   security.pam.services = {
-    gdm.enableGnomeKeyring = true;
+    # ly.enableGnomeKeyring = true;
+    sddm.enableGnomeKeyring = true;
   };
 
   services.dbus.packages = with pkgs; [
@@ -120,13 +182,16 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    zsh
-    nixd
-    sbctl
-    clinfo
-    libsecret
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      zsh
+      nixd
+      sbctl
+      clinfo
+      libsecret
+    ]
+    ++ sddm-theme-pkgs;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

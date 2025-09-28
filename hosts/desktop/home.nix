@@ -2,6 +2,7 @@
   inputs,
   config,
   pkgs,
+  myPkgs,
   lib,
   ...
 }:
@@ -52,6 +53,7 @@
         "$mod,       Semicolon, exec, smile" # Emoji picker
         "$mod,       E,         exec, rofimoji -r 💖 --use-icons" # Better emoji picker
         "$mod,       Space,     exec, rofi -show drun -display-drun ♥ -show-icons" # App launcher
+        "$mod,       B,         exec, ${myPkgs.rofi-bookmarks-zen}/bin/main | rofi -dmenu -p \"bark! wruff!\" -show-icons" # Bookmarks
         "$mod SHIFT, C,         exec, hyprpicker -a" # Color picker
         "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
         "$mod SHIFT, R,         exec, kooha"
@@ -305,8 +307,8 @@
         paths = [ vscode ];
         buildInputs = [ makeWrapper ];
         postBuild = ''
-          		wrapProgram $out/bin/code \
-          		--add-flags "--password-store=gnome-libsecret"
+          wrapProgram $out/bin/code \
+          --add-flags "--password-store=gnome-libsecret"
         '';
       })
       nixfmt-rfc-style
@@ -349,6 +351,7 @@
       element-desktop
       bitwig-studio
       appflowy
+      yazi
       #! Hyprland stuff
       swaynotificationcenter
       hyprpolkitagent
@@ -368,6 +371,7 @@
       qt6.qtwayland
       wl-clipboard
       gnome-keyring
+      (inputs.quickshell.packages.${pkgs.system}.default)
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })

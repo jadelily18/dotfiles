@@ -22,6 +22,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # pretty SDDM theme: https://github.com/uiriansan/SilentSDDM
+    silentSDDM = {
+      url = "github:uiriansan/SilentSDDM";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stylix.url = "github:danth/stylix";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -36,6 +42,11 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/quickshell/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
@@ -54,6 +65,7 @@
       vscode-server,
       stylix,
       flake-utils,
+      quickshell,
       lanzaboote,
       disko,
       ...
@@ -201,10 +213,14 @@
                 (inputs.self.packages.${system}.python-fabric)
               ]
             ))
+            kdePackages.qtdeclarative
           ];
         };
 
         packages = {
+          rofi-bookmarks-zen = pkgs.callPackage ./pkgs/rofi-bookmarks-zen/derivation.nix {
+            inherit pypkgs pkgs;
+          };
           python-fabric = pkgs.callPackage ./pkgs/fabric/derivation.nix { inherit pypkgs pkgs lib; };
           lily-fabric = pkgs.callPackage ./pkgs/lily-fabric/derivation.nix {
             inherit pypkgs pkgs;
@@ -216,12 +232,22 @@
           value = value;
         }) fluent-emoji-webfont);
 
-        apps.lily-fabric = {
-          type = "app";
-          program = "${self.packages.${system}.lily-fabric}/bin/bar";
-          meta = {
-            changelog = "";
-            description = "jade's fabric configuration";
+        apps = {
+          lily-fabric = {
+            type = "app";
+            program = "${self.packages.${system}.lily-fabric}/bin/bar";
+            meta = {
+              changelog = "";
+              description = "jade's fabric configuration";
+            };
+          };
+          rofi-bookmarks-zen = {
+            type = "app";
+            program = "${self.packages.${system}.rofi-bookmarks-zen}/bin/main";
+            meta = {
+              changelog = "";
+              description = "Implementation for grabbing Zen bookmarks in rofi.";
+            };
           };
         };
       }

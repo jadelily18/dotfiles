@@ -36,7 +36,7 @@
 	/* text color */
 	color: var(--foreground);
 	font-size: 16px;
-	font-family: "Jost*", sans-serif;
+	font-family: "Inter", sans-serif;
 	/* pill shape */
 	border-radius: 100px;
 }

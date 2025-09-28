@@ -900,6 +900,26 @@
         "type": "github"
       }
     },
+    "quickshell": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1758273351,
+        "narHash": "sha256-wOv1guIi9THD1NjOtBU2Xh/Avg9xv7nIjsfFSkr1NeQ=",
+        "ref": "refs/heads/master",
+        "rev": "e9a574d919a89602d2868621576b2ccae54a5cb0",
+        "revCount": 675,
+        "type": "git",
+        "url": "https://git.outfoxxed.me/quickshell/quickshell"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.outfoxxed.me/quickshell/quickshell"
+      }
+    },
     "root": {
       "inputs": {
         "disko": "disko",
@@ -911,7 +931,9 @@
         "nix-flatpak": "nix-flatpak",
         "nixos-cosmic": "nixos-cosmic",
         "nixpkgs": "nixpkgs_3",
+        "quickshell": "quickshell",
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
+        "silentSDDM": "silentSDDM",
         "stylix": "stylix",
         "vscode-server": "vscode-server"
       }
@@ -980,6 +1002,26 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "silentSDDM": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1758897211,
+        "narHash": "sha256-jRhrsj2PN9mJ+hrfhGn+y3htxzy80zirj3swFAUThGQ=",
+        "owner": "uiriansan",
+        "repo": "SilentSDDM",
+        "rev": "cfb0e3eb380cfc61e73ad4bce90e4dcbb9400291",
+        "type": "github"
+      },
+      "original": {
+        "owner": "uiriansan",
+        "repo": "SilentSDDM",
         "type": "github"
       }
     },
