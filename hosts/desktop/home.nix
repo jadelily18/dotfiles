@@ -11,6 +11,8 @@
 
   imports = [
     inputs.self.homeModules.default
+    inputs.spicetify-nix.homeManagerModules.spicetify
+    inputs.zen-browser.homeModules.beta
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -47,6 +49,9 @@
         "HYPRCURSOR_SIZE,              24"
         "XCURSOR_SIZE,                 24"
       ];
+      bindm = [
+        "$mod CTRL, mouse:272, resizewindow"
+      ];
       bind = [
         ## Basic system stuff
         "$mod,       T,         exec, kitty"
@@ -57,7 +62,7 @@
         "$mod SHIFT, C,         exec, hyprpicker -a" # Color picker
         "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
         "$mod SHIFT, R,         exec, kooha"
-        "$mod SHIFT, Z,         exec, flatpak run app.zen_browser.zen"
+        "$mod SHIFT, Z,         exec, zen-beta"
 
         ## Apps
         "$mod SHIFT,F,exec,nautilus"
@@ -69,6 +74,12 @@
         "$mod, Q, killactive"
         "$mod, F, fullscreen"
         "$mod, I, togglefloating"
+
+        # Resize windows
+        "$mod CTRL, LEFT,  resizeactive, -75 0"
+        "$mod CTRL, RIGHT, resizeactive, 75 0"
+        "$mod CTRL, UP,    resizeactive, 0 -75"
+        "$mod CTRL, DOWN,  resizeactive, 0 75"
 
         # Cycle windows
         "$mod,       TAB, cyclenext"
@@ -87,9 +98,6 @@
         "$mod SHIFT, DOWN,  movewindow, d"
 
         # Workspace navigation
-        "$mod CTRL, LEFT,  workspace, e-1" # Previous workspace (by number)
-        "$mod CTRL, RIGHT, workspace, e+1" # Next Workspace (by number)
-
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
         "$mod, 3, workspace, 3"
@@ -122,7 +130,7 @@
       ];
       cursor.enable_hyprcursor = true;
       decoration = {
-        rounding = 16;
+        rounding = 20;
         active_opacity = 0.9;
         inactive_opacity = 0.8;
         fullscreen_opacity = 1.0;
@@ -133,6 +141,7 @@
           size = 16;
         };
       };
+      misc.animate_manual_resizes = true;
     };
   };
 
@@ -285,13 +294,46 @@
       };
   };
 
+  programs.spicetify = {
+    enable = true;
+  };
+
   programs.kitty.enable = lib.mkForce true;
   kitty.useX11 = false;
 
   # Custom GNOME configuration
   gnome-settings.enable = true;
 
-  services.gnome-keyring.enable = true;
+  # services.gnome-keyring.enable = true;
+
+  gtk = {
+    enable = true;
+    theme = {
+      # name = lib.mkForce "Catppuccin-Mocha-Pink";
+      # package = lib.mkForce pkgs.catppuccin-gtk;
+      # name = lib.mkForce "Breeze-Dark";
+      # package = lib.mkForce pkgs.kdePackages.breeze-gtk;
+    };
+    iconTheme = {
+      name = "kora";
+      package = pkgs.kora-icon-theme;
+    };
+  };
+
+  xdg = {
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+        "text/html" = [ "app.zen_browser.zen.desktop" ];
+        "application/pdf" = [ "org.gnome.Evince.desktop" ];
+        "image/*" = [ "org.gnome.Evince.desktop" ];
+        "video/*" = [ "vlc.desktop" ];
+        "audio/*" = [ "vlc.desktop" ];
+        "application/zip" = [ "org.kde.ark.desktop" ];
+      };
+    };
+  };
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -319,8 +361,8 @@
       prismlauncher
       smile
       # davinci-resolve doesn't work properly and I don't want to fix it right now
-      spotify
-      spicetify-cli
+      # spotify
+      # spicetify-cli
       heroic
       eyedropper
       openrgb-with-all-plugins
@@ -337,9 +379,6 @@
       vivaldi
       recaf-launcher
       vlc
-      (flameshot.overrideAttrs (old: {
-        cmakeFlags = old.cmakeFlags or [ ] ++ [ "-DUSE_WAYLAND_GRIM=ON" ];
-      }))
       gradle
       jetbrains-toolbox
       audacity
@@ -352,6 +391,13 @@
       bitwig-studio
       appflowy
       yazi
+      kora-icon-theme
+      kdePackages.ark
+      gnome-text-editor
+      gnome-photos
+      evince
+      blockbench
+      nitch
       #! Hyprland stuff
       swaynotificationcenter
       hyprpolkitagent
@@ -430,6 +476,8 @@ above are fixed!";
       };
     };
   };
+
+  programs.zen-browser.enable = true;
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

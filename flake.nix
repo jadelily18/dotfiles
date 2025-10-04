@@ -39,6 +39,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
     flake-utils.url = "github:numtide/flake-utils";
@@ -50,6 +52,11 @@
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -65,7 +72,6 @@
       vscode-server,
       stylix,
       flake-utils,
-      quickshell,
       lanzaboote,
       disko,
       ...

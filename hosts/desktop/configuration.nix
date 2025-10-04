@@ -67,6 +67,7 @@ in
       "udev.log_priority=3"
       "rd.systemd.show_status=auto"
     ];
+
     loader.systemd-boot = {
       enable = lib.mkForce false;
       consoleMode = "1";
@@ -127,21 +128,51 @@ in
   services.displayManager.sessionPackages = [ pkgs.hyprland ];
   xdg.portal = {
     enable = true;
+    xdgOpenUsePortal = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gtk
+      xdg-desktop-portal-hyprland
+    ];
+    config = {
+      common = {
+        default = [
+          "gtk"
+        ];
+      };
+      hyprland = {
+        default = [
+          "hyprland"
+          "gtk"
+        ];
+      };
+    };
+  };
+
+  services.gnome.gnome-keyring.enable = true;
+
+  services.dbus = {
+    enable = true;
+    packages = with pkgs; [
+      gnome-keyring
+      libsecret
     ];
   };
 
   security.pam.services = {
-    # ly.enableGnomeKeyring = true;
     sddm.enableGnomeKeyring = true;
+    login.enableGnomeKeyring = true;
+    hyprland.enableGnomeKeyring = true;
   };
 
-  services.dbus.packages = with pkgs; [
-    gnome-keyring
-    libsecret
-  ];
+  security.unprivilegedUsernsClone = true;
+
+  security.wrappers.bwrap = {
+    enable = true;
+    source = "${pkgs.bubblewrap}/bin/bwrap";
+    owner = "root";
+    group = "root";
+    permissions = "u+xs,g+x,o+x";
+  };
 
   virtualisation.docker.enable = true;
 
@@ -157,15 +188,17 @@ in
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  services.flatpak.enable = true;
-  services.flatpak.packages = [
-    "app.zen_browser.zen"
-    "com.google.Chrome"
-    "io.github.java_decompiler.jd-gui"
-    "org.vinegarhq.Sober"
-    "com.modrinth.ModrinthApp"
-    "com.usebruno.Bruno"
-  ];
+  services.flatpak = {
+    enable = true;
+    packages = [
+      # "app.zen_browser.zen"
+      "com.google.Chrome"
+      "io.github.java_decompiler.jd-gui"
+      "org.vinegarhq.Sober"
+      "com.modrinth.ModrinthApp"
+      "com.usebruno.Bruno"
+    ];
+  };
 
   networking.firewall = {
     enable = true;
@@ -180,6 +213,15 @@ in
   # Recommended by nixd
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
+  environment.etc = {
+    "1password/custom_allowed_browsers" = {
+      text = ''
+        .zen-wrapped
+      ''; # or just "zen" if you use unwrapped package
+      mode = "0755";
+    };
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages =
@@ -190,6 +232,8 @@ in
       sbctl
       clinfo
       libsecret
+      file
+      xdg-utils
     ]
     ++ sddm-theme-pkgs;
 
