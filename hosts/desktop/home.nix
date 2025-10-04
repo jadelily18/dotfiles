@@ -327,11 +327,36 @@
   };
 
   xdg = {
+    portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal
+        xdg-desktop-portal-gtk
+        xdg-desktop-portal-hyprland
+      ];
+      config = {
+        common = {
+          default = [
+            "gtk"
+          ];
+        };
+        hyprland = {
+          default = [
+            "hyprland"
+            "gtk"
+          ];
+        };
+      };
+    };
+
     mimeApps = {
       enable = true;
       defaultApplications = {
+        "x-scheme-handler/http" = "zen-beta.desktop";
+        "x-scheme-handler/https" = "zen-beta.desktop";
         "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
-        "text/html" = [ "app.zen_browser.zen.desktop" ];
+        "text/html" = [ "zen-beta.desktop" ];
         "application/pdf" = [ "org.gnome.Evince.desktop" ];
         "image/*" = [ "org.gnome.Evince.desktop" ];
         "video/*" = [ "vlc.desktop" ];
