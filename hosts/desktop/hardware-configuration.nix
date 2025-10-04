@@ -40,13 +40,8 @@
   boot.loader.efi.efiSysMountPoint = "/boot";
 
   hardware.graphics = {
+    enable = true;
     enable32Bit = true;
-    extraPackages = with pkgs; [
-      rocmPackages.clr.icd
-    ];
-    extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
-    ];
   };
 
   swapDevices = [ ];
