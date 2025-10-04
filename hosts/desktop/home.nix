@@ -63,12 +63,13 @@
         "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
         "$mod SHIFT, R,         exec, kooha"
         "$mod SHIFT, Z,         exec, zen-beta"
+        "$mod SHIFT, L,         exec, reload-waybar"
 
         ## Apps
-        "$mod SHIFT,F,exec,nautilus"
-        "$mod SHIFT,V,exec,vesktop"
-        "$mod SHIFT,P,exec,1password"
-        "$mod SHIFT,O,exec,1password --quick-access"
+        "$mod SHIFT, F, exec, nautilus"
+        "$mod SHIFT, V, exec, vesktop"
+        "$mod SHIFT, P, exec, 1password"
+        "$mod SHIFT, O, exec, 1password --quick-access"
 
         ## Window/workspace management
         "$mod, Q, killactive"
@@ -124,6 +125,7 @@
       exec-once = [
         "swaync"
         "systemctl --user start hyprpolkitagent"
+        "waybar"
         "hyprpanel"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
@@ -143,6 +145,10 @@
       };
       misc.animate_manual_resizes = true;
     };
+  };
+
+  programs.waybar = {
+    enable = true;
   };
 
   programs.hyprpanel = {
@@ -418,6 +424,7 @@
       wl-clipboard
       gnome-keyring
       (inputs.quickshell.packages.${pkgs.system}.default)
+      myPkgs.shell-scripts.reload-waybar
     ]
     ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
     ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })

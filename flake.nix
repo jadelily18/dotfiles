@@ -232,6 +232,8 @@
             inherit pypkgs pkgs;
             python-fabric = (inputs.self.packages.${system}.python-fabric);
           };
+
+          shell-scripts = import ./pkgs/shell-scripts.nix { inherit pkgs; };
         }
         // (lib.mapAttrs' (name: value: {
           name = "fluent-emoji-webfont-${name}";
