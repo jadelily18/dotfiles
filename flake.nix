@@ -121,7 +121,7 @@
                   home-manager.backupFileExtension = "backup";
                 }
               ]
-              ++ lib.optional useDefaultModules ./modules
+              ++ lib.optional useDefaultModules ./modules/nixos
               ++ lib.optional enableFlatpak nix-flatpak.nixosModules.nix-flatpak
               ++ lib.optional enableStylix stylix.nixosModules.stylix
               ++ lib.optional enableVscodeServer vscode-server.nixosModules.default
@@ -181,7 +181,7 @@
         ];
       };
 
-      homeModules.default = ./modules/home;
+      homeModules.default = ./modules/hm;
     }
     // flake-utils.lib.eachDefaultSystem (
       system:

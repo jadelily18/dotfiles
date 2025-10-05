@@ -125,6 +125,8 @@ in
     $X_RANDR --output DisplayPort-2 --primary --mode 2560x1440
   '';
 
+  services.power-profiles-daemon.enable = true;
+
   services.displayManager.sessionPackages = [ pkgs.hyprland ];
 
   services.gnome.gnome-keyring.enable = true;

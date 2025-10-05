@@ -18,7 +18,7 @@ in
     stylix = {
       enable = true;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-      image = ../files/wallpapers/rayquaza_catppuccin.png;
+      image = ../../files/wallpapers/rayquaza_catppuccin.png;
 
       fonts = {
         serif = config.stylix.fonts.sansSerif;

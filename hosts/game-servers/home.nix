@@ -31,8 +31,8 @@
     [
       _1password-cli
     ]
-    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
-    ++ (import ../../modules/home/shared/development.nix { inherit pkgs; });
+    ++ (import ../../modules/pkgs/packages.nix { inherit pkgs; })
+    ++ (import ../../modules/pkgs/development.nix { inherit pkgs; });
 
   gui.enable = false;
 

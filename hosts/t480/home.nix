@@ -41,7 +41,7 @@
       filezilla
       modrinth-app
     ]
-    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; });
+    ++ (import ../../modules/pkgs/packages.nix { inherit pkgs; });
 
   gui.enable = true;
 

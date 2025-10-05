@@ -149,6 +149,9 @@
 
   programs.waybar = {
     enable = true;
+    # settings = {
+    #   modules-left = [ "hyprland/workspaces" ];
+    # };
   };
 
   programs.hyprpanel = {
@@ -451,9 +454,8 @@
       (inputs.quickshell.packages.${pkgs.system}.default)
       myPkgs.shell-scripts.reload-waybar
     ]
-    ++ (import ../../modules/home/shared/packages.nix { inherit pkgs; })
-    ++ (import ../../modules/home/shared/gnomeExtensions.nix { inherit pkgs; })
-    ++ (import ../../modules/home/shared/development.nix { inherit pkgs; });
+    ++ (import ../../modules/pkgs/packages.nix { inherit pkgs; })
+    ++ (import ../../modules/pkgs/development.nix { inherit pkgs; });
 
   gui.enable = true;
 
