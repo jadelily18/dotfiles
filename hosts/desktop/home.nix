@@ -37,7 +37,7 @@
       "$terminal" = "kitty";
       monitor = [
         "DP-3,     2560x1440@144, 0x0,     1" # main display
-        "DP-1,     2560x1440@60,  2560x0,  1" # right display
+        "DP-2,     2560x1440@60,  2560x0,  1" # right display
         "HDMI-A-1, 2560x1440@60,  -2560x0, 1" # left display
         ",         preferred,     auto,    1" # for any other display, set preferred resolution and place on the right
       ];
@@ -123,10 +123,10 @@
         "$mod SHIFT, 0, movetoworkspace, 10"
       ];
       exec-once = [
-        "swaync"
         "systemctl --user start hyprpolkitagent"
         "waybar"
-        "hyprpanel"
+        "swaync -c ~/dotfiles/modules/hm/swaync/config.json -s ~/dotfiles/modules/hm/swaync/style.css"
+        "uair"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
       ];
@@ -143,7 +143,19 @@
           size = 16;
         };
       };
-      misc.animate_manual_resizes = true;
+      misc = {
+        animate_manual_resizes = true;
+        enable_anr_dialog = false;
+      };
+      general = {
+        "col.active_border" = lib.mkForce "0xFFEDABD6";
+      };
+      windowrulev2 = [
+        "float,class:^(org.pulseaudio.pavucontrol)$"
+        "size 750 550,class:^(org.pulseaudio.pavucontrol)$"
+        "move 1500 70,class:^(org.pulseaudio.pavucontrol)$"
+        "pin,class:^(org.pulseaudio.pavucontrol)$"
+      ];
     };
   };
 
@@ -152,115 +164,10 @@
     # settings = {
     #   modules-left = [ "hyprland/workspaces" ];
     # };
-  };
-
-  programs.hyprpanel = {
-    enable = true;
     settings = {
-      scalingPriority = "gdk";
-
-      menus = {
-        transitionTime = 100;
-        volume.raiseMaximumVolume = true;
-        media = {
-          displayTimeTooltip = true;
-          noMediaText = "No media playing...";
-        };
-        dashboard = {
-          # powermenu.avatar.image = "IMAGE PATH :3";
-          controls.enabled = true;
-          directories.enabled = false;
-          shortcuts.left = {
-            shortcut1 = {
-              icon = "";
-              tooltip = "Zen Browser";
-              command = "flatpak run app.zen_browser.zen";
-            };
-            shortcut3 = {
-              tooltip = "Discord (vesktop)";
-              command = "vesktop";
-            };
-          };
-        };
-      };
-
-      bar = {
-        launcher.autoDetectIcon = true;
-        notifications.show_total = true;
-        clock = {
-          icon = "";
-          format = "%I:%M:%S %p";
-          showTime = true;
-        };
-        workspaces = {
-          show_icons = false;
-          show_numbered = true;
-          monitorSpecific = true;
-          numbered_active_indicator = "highlight";
-        };
-      };
-
-      notifications = {
-        monitor = 1;
-        activeMonitor = false;
-        autoDismiss = true;
-        clearDelay = 2000;
-      };
-
-      theme = {
-        font = {
-          weight = 800;
-          size = "0.85rem";
-        };
-        osd = {
-          monitor = 1;
-          muted_zero = true;
-          radius = "9999px";
-        };
-        notification = {
-          opacity = 95;
-          border_radius = "1.55em";
-        };
-        bar = {
-          layer = "top";
-          transparent = true;
-          border.width = "0.15em";
-          buttons = {
-            opacity = 85;
-            radius = "9999px";
-            borderSize = "0.1em";
-            volume.enableBorder = false;
-            windowTitle.enableBorder = false;
-            notifications.enableBorder = true;
-            workspaces = {
-              numbered_active_highlight_border = "9999px";
-              numbered_active_highlight_padding = "0.5em";
-            };
-          };
-          menus = {
-            opacity = 95;
-            card_radius = "1.25em";
-            tooltip.radius = "1.35em";
-            border.radius = "1.55em";
-            popover.radius = "1.55em";
-            buttons.radius = "9999px";
-            progressbar.radius = "9999px";
-            slider = {
-              slider_radius = "9999px";
-              progress_radius = "9999px";
-            };
-            switch = {
-              radius = "9999px";
-              slider_radius = "9999px";
-            };
-            menu.dashboard.profiles = {
-              size = "7.5em";
-              radius = "9999px";
-            };
-          };
-        };
-      };
+      bar = builtins.fromJSON (builtins.readFile ../../modules/hm/waybar/config.json);
     };
+    style = builtins.readFile ../../modules/hm/waybar/style.css;
   };
 
   programs.rofi = {
@@ -395,9 +302,10 @@
       prismlauncher
       smile
       # davinci-resolve doesn't work properly and I don't want to fix it right now
-      # spotify
-      # spicetify-cli
+
       heroic
+      lutris
+      itch
       eyedropper
       openrgb-with-all-plugins
       hoppscotch
@@ -427,11 +335,18 @@
       yazi
       kora-icon-theme
       kdePackages.ark
+      file-roller
       gnome-text-editor
       gnome-photos
+      snapshot
       evince
       blockbench
       nitch
+      yad
+      uair
+      nushell # testing
+      pavucontrol
+
       #! Hyprland stuff
       swaynotificationcenter
       hyprpolkitagent
@@ -446,13 +361,20 @@
       swappy
       kooha
       rofimoji
+
       # libs for hyprland
       qt5.qtwayland
       qt6.qtwayland
       wl-clipboard
       gnome-keyring
+      playerctl
+      libnotify
       (inputs.quickshell.packages.${pkgs.system}.default)
       myPkgs.shell-scripts.reload-waybar
+      myPkgs.shell-scripts.toggle-pavucontrol
+
+      # fonts
+      (inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd)
     ]
     ++ (import ../../modules/pkgs/packages.nix { inherit pkgs; })
     ++ (import ../../modules/pkgs/development.nix { inherit pkgs; });
@@ -521,10 +443,10 @@ above are fixed!";
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
 
-    "scripts" = {
-      source = ../../files/scripts;
-      recursive = true;
-    };
+    # "scripts" = {
+    #   source = ../../files/scripts;
+    #   recursive = true;
+    # };
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''

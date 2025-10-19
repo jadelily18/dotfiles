@@ -4,6 +4,11 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
+    apple-fonts = {
+      url = "github:Lyndeno/apple-fonts.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland.url = "github:hyprwm/Hyprland";
 
     rose-pine-hyprcursor = {

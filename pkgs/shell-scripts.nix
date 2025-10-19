@@ -15,7 +15,7 @@
     fi
 
     # Start waybar
-    waybar "$@" &>/dev/null &
+    waybar -c ~/dotfiles/modules/hm/waybar/config.json -s ~/dotfiles/modules/hm/waybar/style.css "$@" &>/dev/null &
 
     # Verify it started
     sleep 0.3
@@ -24,5 +24,10 @@
     else
       echo "❌ ERROR: waybar failed to start!"
     fi
+  '';
+
+  toggle-pavucontrol = pkgs.writeShellScriptBin "toggle-pavucontrol" ''
+    #!/usr/bin/env bash
+    pkill pavucontrol || pavucontrol &
   '';
 }

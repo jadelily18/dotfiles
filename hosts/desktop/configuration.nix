@@ -66,6 +66,7 @@ in
       "boot.shell_on_fail"
       "udev.log_priority=3"
       "rd.systemd.show_status=auto"
+      "amd_pstate=active"
     ];
 
     loader.systemd-boot = {
@@ -119,7 +120,7 @@ in
   services.xserver.displayManager.setupCommands = ''
     X_RANDR="${lib.getExe pkgs.xorg.xrandr}"
 
-    $X_RANDR --output DisplayPort-0 --off
+    $X_RANDR --output DisplayPort-1 --off
     $X_RANDR --output HDMI-A-0 --off
 
     $X_RANDR --output DisplayPort-2 --primary --mode 2560x1440

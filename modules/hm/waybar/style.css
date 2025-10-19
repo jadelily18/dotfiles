@@ -1,0 +1,92 @@
+* {
+	border: none;
+	font-family: "SFProDisplay Nerd Font";
+	font-weight: 800;
+	font-size: 17px;
+
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+window#waybar {
+	background: transparent;
+	color: rgb(17, 17, 27);
+}
+
+#workspaces {
+	background: rgba(17, 17, 27, 0.75);
+	border-radius: 9999px;
+	padding: 6px;
+}
+
+#workspaces button {
+	border-radius: 9999px;
+	transition: background 0.2s, color 0.2s, padding 0.15s;
+	padding: 0 4px;
+}
+
+#workspaces button:hover {
+	background: rgba(205, 214, 244, 0.85);
+	color: rgba(17, 17, 27, 0.75);
+}
+
+#workspaces button:not(:first-child) {
+	margin-left: 8px;
+}
+
+#workspaces button.visible {
+	padding: 0 16px;
+	background: rgb(205, 214, 244);
+	color: rgba(17, 17, 27, 0.75);
+}
+
+#power-profiles-daemon,
+#tray,
+#pulseaudio,
+#custom-notification {
+	background: rgba(17, 17, 27, 0.75);
+	color: rgb(205, 214, 244);
+}
+
+#power-profiles-daemon {
+	padding: 6px 10px;
+	border-radius: 9999px;
+	font-size: 15px;
+}
+
+#power-profiles-daemon,
+#pulseaudio,
+#custom-notification {
+	transition: background 0.2s, color 0.2s;
+}
+
+#power-profiles-daemon:hover,
+#pulseaudio:hover,
+#custom-notification:hover {
+	background: rgba(17, 17, 27, 0.65);
+}
+
+#clock {
+	font-size: 18px;
+}
+
+#tray,
+#pulseaudio,
+#mpris,
+#custom-notification {
+	padding: 6px 10px;
+	border-radius: 9999px;
+}
+
+#tray,
+#pulseaudio,
+#mpris,
+#power-profiles-daemon,
+#custom-notification {
+	margin-left: 6px;
+}
+
+.notif-indicator {
+	color: rgba(17, 17, 27, 0.65);
+}

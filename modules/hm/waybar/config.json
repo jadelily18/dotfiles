@@ -1,0 +1,72 @@
+{
+	"layer": "top",
+	"position": "top",
+	"margin-top": 18,
+	"width": 1600,
+	"reload_style_on_change": true,
+	"modules-left": ["hyprland/workspaces", "power-profiles-daemon", "mpris"],
+	"modules-center": ["clock"],
+	"modules-right": ["pulseaudio", "tray", "custom/notification"],
+	"power-profiles-daemon": {
+		"format": "{icon}",
+		"tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+		"tooltip": true,
+		"format-icons": {
+			"default": "",
+			"performance": "",
+			"balanced": "",
+			"power-saver": ""
+		}
+	},
+	"clock": {
+		"interval": 1,
+		"format": "󰥔 {:%I:%M:%S %p}",
+		"format-alt": " --:--:-- --",
+		"tooltip": true,
+		"tooltip-format": "{:%A, %B %d, %Y}"
+	},
+	"mpris": {
+		"format": "{status_icon} {dynamic}",
+		"dynamic-order": ["title", "artist", "album"],
+		"dynamic-len": 36,
+		"status-icons": {
+			"playing": "",
+			"paused": "",
+			"stopped": ""
+		}
+	},
+	"pulseaudio": {
+		"format": "{icon} {volume}%",
+		"format-muted": "󰟎",
+		"format-icons": {
+			"default": "󰋋",
+			"headphones": "󰋋"
+		},
+		"on-click": "toggle-pavucontrol"
+	},
+	"tray": {
+		"icon-size": 20,
+		"max-size": 16,
+		"spacing": 6
+	},
+	"custom/notification": {
+		"tooltip": false,
+		"format": "{icon} {0}",
+		"format-icons": {
+			"notification": "󱅫",
+			"none": "",
+			"dnd-notification": "󰂛",
+			"dnd-none": "",
+			"inhibited-notification": "󰂚",
+			"inhibited-none": "",
+			"dnd-inhibited-notification": "󰂛",
+			"dnd-inhibited-none": ""
+		},
+		"return-type": "json",
+		"exec-if": "which swaync-client",
+		"exec": "swaync-client -swb",
+		"on-click": "swaync-client -t -sw",
+		"on-click-right": "swaync-client -d -sw",
+		"escape": true
+	}
+}
