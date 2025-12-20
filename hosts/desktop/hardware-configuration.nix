@@ -2,7 +2,6 @@
   config,
   lib,
   modulesPath,
-  pkgs,
   ...
 }:
 
@@ -23,20 +22,33 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/d020f1ff-572f-4923-a7e4-16b758889ff0";
-    fsType = "ext4";
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/d020f1ff-572f-4923-a7e4-16b758889ff0";
+      fsType = "ext4";
+    };
+
+    "/mnt/8tb-hdd" = {
+      device = "/dev/disk/by-uuid/DCDEB704DEB6D64C";
+      fsType = "ntfs";
+    };
+
+    "/mnt/4tb-hdd" = {
+      device = "/dev/disk/by-uuid/6854784154781452";
+      fsType = "ntfs";
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-uuid/DB40-B05C";
+      fsType = "vfat";
+      options = [
+        "fmask=0077"
+        "dmask=0077"
+      ];
+      neededForBoot = true;
+    };
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/DB40-B05C";
-    fsType = "vfat";
-    options = [
-      "fmask=0077"
-      "dmask=0077"
-    ];
-    neededForBoot = true;
-  };
   boot.loader.efi.efiSysMountPoint = "/boot";
 
   hardware.graphics = {

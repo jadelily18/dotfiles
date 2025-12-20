@@ -1,5 +1,4 @@
 {
-  stdenv,
   pkgs,
   variant,
 }:
@@ -13,7 +12,7 @@ let
   };
   capitalizedVariant = variantMap.${variant};
 in
-stdenv.mkDerivation {
+pkgs.stdenv.mkDerivation {
   pname = "fluent-emoji-webfont-${variant}";
   inherit version;
 

@@ -14,7 +14,7 @@ let
   wallpaperName = builtins.baseNameOf wallpaperPath;
   wallpaper = pkgs.runCommand wallpaperName { } ''
     local_path=${wallpaperPath}
-    cp "$local_path" "$out" 
+    cp "$local_path" "$out"
   '';
   sddm-theme = inputs.silentSDDM.packages.${pkgs.system}.default.override {
     # theme = "rei";
@@ -87,6 +87,9 @@ in
     initrd.verbose = false;
   };
 
+  hardware.bluetooth.enable = true;
+  hardware.opentabletdriver.enable = true;
+
   programs.firefox.enable = true;
 
   programs.steam.enable = true;
@@ -103,18 +106,22 @@ in
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   qt.enable = true;
-  services.displayManager.sddm = {
-    enable = true;
-    package = pkgs.kdePackages.sddm;
-    theme = sddm-theme.pname;
-    extraPackages = sddm-theme.propagatedBuildInputs;
+  # services.displayManager.sddm = {
+  #   enable = true;
+  #   package = pkgs.kdePackages.sddm;
+  #   theme = sddm-theme.pname;
+  #   extraPackages = sddm-theme.propagatedBuildInputs;
 
-    settings = {
-      General = {
-        GreeterEnvironment = "QML2_IMPORT_PATH=${sddm-theme}/share/sddm/themes/${sddm-theme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
-        # InputMethod = "qtvirtualkeyboard";
-      };
-    };
+  #   settings = {
+  #     General = {
+  #       GreeterEnvironment = "QML2_IMPORT_PATH=${sddm-theme}/share/sddm/themes/${sddm-theme.pname}/components/,QT_IM_MODULE=qtvirtualkeyboard";
+  #       # InputMethod = "qtvirtualkeyboard";
+  #     };
+  #   };
+  # };
+
+  services.displayManager.ly = {
+    enable = true;
   };
 
   services.xserver.displayManager.setupCommands = ''
@@ -141,9 +148,10 @@ in
   };
 
   security.pam.services = {
-    sddm.enableGnomeKeyring = true;
-    login.enableGnomeKeyring = true;
+    # sddm.enableGnomeKeyring = true;
+    # login.enableGnomeKeyring = true;
     hyprland.enableGnomeKeyring = true;
+    ly.enableGnomeKeyring = true;
   };
 
   security.unprivilegedUsernsClone = true;
@@ -177,12 +185,12 @@ in
       "com.google.Chrome"
       "io.github.java_decompiler.jd-gui"
       "org.vinegarhq.Sober"
-      "com.modrinth.ModrinthApp"
+      # "com.modrinth.ModrinthApp"
       "com.usebruno.Bruno"
     ];
   };
 
-  networking.firewall = {
+  networking.firewall = rec {
     enable = true;
     allowedTCPPorts = [
       5173
@@ -190,6 +198,14 @@ in
     allowedUDPPorts = [
       5173
     ];
+
+    allowedTCPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      }
+    ];
+    allowedUDPPortRanges = allowedTCPPortRanges;
   };
 
   # Recommended by nixd
@@ -216,7 +232,15 @@ in
       libsecret
       file
       xdg-utils
+      efibootmgr
+      hyprpolkitagent
+      (inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default)
     ]
+    ++ (with pkgs.kdePackages; [
+      qtsvg
+      qtimageformats
+      qtmultimedia
+    ])
     ++ sddm-theme-pkgs;
 
   # This value determines the NixOS release from which the default

@@ -6,7 +6,10 @@
   lib,
   ...
 }:
-
+let
+  system = pkgs.stdenv.hostPlatform.system;
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${system};
+in
 {
 
   imports = [
@@ -50,7 +53,11 @@
         "XCURSOR_SIZE,                 24"
       ];
       bindm = [
-        "$mod CTRL, mouse:272, resizewindow"
+        "$mod, mouse:273, resizewindow"
+        "$mod, mouse:272, movewindow"
+      ];
+      bindc = [
+        "$mod, mouse:274, togglefloating"
       ];
       bind = [
         ## Basic system stuff
@@ -125,6 +132,7 @@
       exec-once = [
         "systemctl --user start hyprpolkitagent"
         "waybar"
+        "hyprpaper"
         "swaync -c ~/dotfiles/modules/hm/swaync/config.json -s ~/dotfiles/modules/hm/swaync/style.css"
         "uair"
         "wl-paste --type text --watch cliphist store"
@@ -146,6 +154,7 @@
       misc = {
         animate_manual_resizes = true;
         enable_anr_dialog = false;
+        middle_click_paste = false;
       };
       general = {
         "col.active_border" = lib.mkForce "0xFFEDABD6";
@@ -157,6 +166,10 @@
         "pin,class:^(org.pulseaudio.pavucontrol)$"
       ];
     };
+  };
+
+  services.hyprpaper = {
+    enable = true;
   };
 
   programs.waybar = {
@@ -212,10 +225,27 @@
 
   programs.spicetify = {
     enable = true;
+    wayland = false; # breaks dropdowns if true
+    enabledExtensions = with spicePkgs.extensions; [
+      shuffle
+      beautifulLyrics
+      # simpleBeautifulLyrics
+      oldCoverClick
+    ];
+    enabledCustomApps = with spicePkgs.apps; [
+      marketplace
+      reddit
+      newReleases
+      lyricsPlus
+    ];
+    theme = spicePkgs.themes.catppuccin;
+    colorScheme = "mocha";
   };
 
   programs.kitty.enable = lib.mkForce true;
   kitty.useX11 = false;
+
+  services.kdeconnect.enable = true;
 
   # Custom GNOME configuration
   gnome-settings.enable = true;
@@ -268,13 +298,16 @@
         "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
         "text/html" = [ "zen-beta.desktop" ];
         "application/pdf" = [ "org.gnome.Evince.desktop" ];
-        "image/*" = [ "org.gnome.Evince.desktop" ];
+        "image/*" = [ "org.gnome.Loupe.desktop" ];
         "video/*" = [ "vlc.desktop" ];
         "audio/*" = [ "vlc.desktop" ];
-        "application/zip" = [ "org.kde.ark.desktop" ];
+        "application/zip" = [ "org.gnome.FileRoller.desktop" ];
+        "application/x-modrinth-modpack+zip" = [ "org.gnome.FileRoller.desktop" ];
       };
     };
   };
+
+  fonts.fontconfig.enable = lib.mkForce false;
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -300,6 +333,7 @@
       steam
       filezilla
       prismlauncher
+      modrinth-app
       smile
       # davinci-resolve doesn't work properly and I don't want to fix it right now
 
@@ -331,25 +365,30 @@
       telegram-desktop
       element-desktop
       bitwig-studio
-      appflowy
       yazi
       kora-icon-theme
       kdePackages.ark
-      file-roller
       gnome-text-editor
-      gnome-photos
+      file-roller
       snapshot
+      loupe
       evince
       blockbench
       nitch
       yad
       uair
-      nushell # testing
+      nushell
       pavucontrol
+      streamcontroller
+      (inputs.affinity-nix.packages.${system}.v3)
+      pureref
+      beeref
+      bambu-studio
+      orca-slicer
+      freecad-wayland
 
       #! Hyprland stuff
       swaynotificationcenter
-      hyprpolkitagent
       cliphist
       nautilus
       hyprpicker
@@ -369,12 +408,14 @@
       gnome-keyring
       playerctl
       libnotify
-      (inputs.quickshell.packages.${pkgs.system}.default)
-      myPkgs.shell-scripts.reload-waybar
-      myPkgs.shell-scripts.toggle-pavucontrol
+
+      # myPkgs.shell-scripts.reload-waybar
+      # myPkgs.shell-scripts.toggle-pavucontrol
+      # myPkgs.shell-scripts.get-windows-boot-id
+      myPkgs.shell-scripts-all
 
       # fonts
-      (inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd)
+      (inputs.apple-fonts.packages.${system}.sf-pro-nerd)
     ]
     ++ (import ../../modules/pkgs/packages.nix { inherit pkgs; })
     ++ (import ../../modules/pkgs/development.nix { inherit pkgs; });
@@ -385,9 +426,13 @@
 
   zsh.enableDirenv = true;
 
-  # gitui's theming is kinda broken
-  stylix.targets.gitui.enable = false;
-  stylix.targets.qt.enable = false;
+  stylix.targets = {
+    # gitui's theming is kinda broken
+    gitui.enable = false;
+    qt.enable = false;
+    zen-browser.enable = false;
+    spicetify.enable = false;
+  };
 
   services.espanso = {
     enable = true;
@@ -427,6 +472,33 @@
 Your project is currently unlisted so it's not available publicly, but
 feel free to share the link with others until the issue(s) mentioned
 above are fixed!";
+          }
+          {
+            trigger = ":mrsep";
+            replace = "					
+---
+
+**It looks like your project is intended for a private server.**
+
+**Once you've addressed the above, and if you're okay with your project being unlisted (only accessible via its URL, not in search results), you can ignore everything below this text. Otherwise, please update your project accordingly!**
+
+---
+";
+          }
+          {
+            trigger = ":mrambroke";
+            replace = "## Content Scanning Error
+Unfortunately, our AutoMod could not process your modpack, this may be because it is invalid or there was an error during export.   
+We ask that you resubmit your project for review, we appreciate your patience and understanding.  
+";
+          }
+          {
+            trigger = ":mrmmh";
+            replace = "(This is from [Fabulously Optimized](https://modrinth.com/modpack/fabulously-optimized), so you must link back there)";
+          }
+          {
+            trigger = ":mrvt";
+            replace = "(This is from [Vanilla Tweaks](https://vanillatweaks.net), so you must link back there)";
           }
         ];
       };

@@ -4,8 +4,8 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
-Singleton{
-	id: root
+Singleton {
+	id: timeWidget
 	property string time
 
 	Process {
@@ -13,7 +13,7 @@ Singleton{
 		command: ["date", "+%l:%M:%S %p"]
 		running: true
 		stdout: StdioCollector {
-			onStreamFinished: root.time = this.text
+			onStreamFinished: timeWidget.time = this.text
 		}
 	}
 

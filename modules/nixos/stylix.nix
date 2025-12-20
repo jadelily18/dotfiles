@@ -35,7 +35,7 @@ in
 
         emoji = {
           name = "Fluent Emoji Color";
-          package = myPkgs.fluent-emoji-webfont-color;
+          package = myPkgs.fluent-emoji-webfont.color;
         };
       };
     };

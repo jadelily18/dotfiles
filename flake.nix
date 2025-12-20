@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
+    affinity-nix.url = "github:mrshmllow/affinity-nix";
+
     apple-fonts = {
       url = "github:Lyndeno/apple-fonts.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,7 +35,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix.url = "github:danth/stylix";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -56,7 +61,7 @@
     };
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+      url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -136,7 +141,17 @@
             };
         in
         {
-          desktop = mkNixosConfig "desktop" { enableLanzaboote = true; };
+          desktop = mkNixosConfig "desktop" {
+            enableLanzaboote = true;
+            extraModules = [
+              {
+                nix.settings = {
+                  substituters = [ "https://cache.garnix.io" ];
+                  trusted-public-keys = [ "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=" ];
+                };
+              }
+            ];
+          };
           game-servers = mkNixosConfig "game-servers" { enableVscodeServer = true; };
           media = mkNixosConfig "media" { enableVscodeServer = true; };
           # mediapi = mkNixosConfig "mediapi" {
@@ -165,26 +180,26 @@
         };
 
       # MacBook configuration
-      darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/macbook/configuration.nix
-          # stylix.nixosModules.stylix
-          # nix-flatpak.nixosModules.nix-flatpak
-          # home-manager.nixosModules.home-manager
-          # {
-          #   home-manager.extraSpecialArgs = { inherit inputs; };
-          #   home-manager.useGlobalPkgs = true;
-          #   home-manager.useUserPackages = true;
-          #   home-manager.users.jade = {
-          #     imports = [
-          #       ./hosts/macbook/home.nix
-          #     ];
-          #   };
-          #   home-manager.backupFileExtension = "backup";
-          # }
-        ];
-      };
+      # darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
+      #   specialArgs = { inherit inputs; };
+      #   modules = [
+      #     ./hosts/macbook/configuration.nix
+      #     # stylix.nixosModules.stylix
+      #     # nix-flatpak.nixosModules.nix-flatpak
+      #     # home-manager.nixosModules.home-manager
+      #     # {
+      #     #   home-manager.extraSpecialArgs = { inherit inputs; };
+      #     #   home-manager.useGlobalPkgs = true;
+      #     #   home-manager.useUserPackages = true;
+      #     #   home-manager.users.jade = {
+      #     #     imports = [
+      #     #       ./hosts/macbook/home.nix
+      #     #     ];
+      #     #   };
+      #     #   home-manager.backupFileExtension = "backup";
+      #     # }
+      #   ];
+      # };
 
       homeModules.default = ./modules/hm;
     }
@@ -194,66 +209,68 @@
         pkgs = import nixpkgs {
           inherit system;
         };
+
+        onlyDrvs = attrs: builtins.attrValues (lib.filterAttrs (_: v: lib.isDerivation v) attrs);
+
         py = pkgs.python313;
         pypkgs = py.pkgs;
 
-        fluent-emoji-webfont = import ./pkgs/fluent-emoji-webfont/default.nix { inherit pkgs; };
+        fluent-emoji = lib.recurseIntoAttrs (
+          pkgs.callPackage ./pkgs/fluent-emoji-webfont { inherit pkgs; }
+        );
+        fluent-emoji-all = pkgs.symlinkJoin {
+          name = "fluent-emoji-webfont-all";
+          paths = onlyDrvs fluent-emoji;
+        };
+
+        shell-scripts = lib.recurseIntoAttrs (pkgs.callPackage ./pkgs/shell-scripts { inherit pkgs; });
+        shell-scripts-all = pkgs.symlinkJoin {
+          name = "shell-scripts-all";
+          paths = onlyDrvs shell-scripts;
+        };
       in
       {
         devShells.default = pkgs.mkShell {
           # buildInputs = with pkgs; [
 
           # ];
-          nativeBuildInputs = with pkgs; [
-            ruff
-            basedpyright
+          # nativeBuildInputs = with pkgs; [
+          #   ruff
+          #   basedpyright
 
-            gtk3
-            gtk-layer-shell
-            cairo
-            gobject-introspection
-            libdbusmenu-gtk3
-            gdk-pixbuf
-            gnome-bluetooth
-            cinnamon-desktop
-            (py.withPackages (
-              ps: with ps; [
-                setuptools
-                wheel
-                build
-                (inputs.self.packages.${system}.python-fabric)
-              ]
-            ))
-            kdePackages.qtdeclarative
-          ];
+          #   gtk3
+          #   gtk-layer-shell
+          #   cairo
+          #   gobject-introspection
+          #   libdbusmenu-gtk3
+          #   gdk-pixbuf
+          #   gnome-bluetooth
+          #   cinnamon-desktop
+          #   (py.withPackages (
+          #     ps: with ps; [
+          #       setuptools
+          #       wheel
+          #       build
+          #       (inputs.self.packages.${system}.python-fabric)
+          #     ]
+          #   ))
+          #   kdePackages.qtdeclarative
+          # ];
         };
 
-        packages = {
+        packages = lib.recurseIntoAttrs {
           rofi-bookmarks-zen = pkgs.callPackage ./pkgs/rofi-bookmarks-zen/derivation.nix {
             inherit pypkgs pkgs;
           };
-          python-fabric = pkgs.callPackage ./pkgs/fabric/derivation.nix { inherit pypkgs pkgs lib; };
-          lily-fabric = pkgs.callPackage ./pkgs/lily-fabric/derivation.nix {
-            inherit pypkgs pkgs;
-            python-fabric = (inputs.self.packages.${system}.python-fabric);
-          };
 
-          shell-scripts = import ./pkgs/shell-scripts.nix { inherit pkgs; };
-        }
-        // (lib.mapAttrs' (name: value: {
-          name = "fluent-emoji-webfont-${name}";
-          value = value;
-        }) fluent-emoji-webfont);
+          fluent-emoji-webfont = fluent-emoji;
+          fluent-emoji-webfont-all = fluent-emoji-all;
+
+          shell-scripts = shell-scripts;
+          shell-scripts-all = shell-scripts-all;
+        };
 
         apps = {
-          lily-fabric = {
-            type = "app";
-            program = "${self.packages.${system}.lily-fabric}/bin/bar";
-            meta = {
-              changelog = "";
-              description = "jade's fabric configuration";
-            };
-          };
           rofi-bookmarks-zen = {
             type = "app";
             program = "${self.packages.${system}.rofi-bookmarks-zen}/bin/main";

@@ -22,18 +22,20 @@ in
     programs.git = {
       enable = true;
 
-      userName = "Jade Nash";
-      userEmail = "jade@lilydev.com";
-
       signing = {
         key = cfg.signingKey;
         signByDefault = true;
       };
 
-      extraConfig = {
+      settings = {
         credential.helper = "${pkgs.git.override { withLibsecret = true; }}/bin/git-credential-libsecret";
 
         init.defaultBranch = "main";
+
+        user = {
+          name = "Jade Nash";
+          email = "jade@lilydev.com";
+        };
       };
     };
   };
