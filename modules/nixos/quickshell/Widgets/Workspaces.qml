@@ -9,6 +9,7 @@ RowLayout {
 	Layout.fillHeight: true
 	Layout.fillWidth: true
 	spacing: 2
+
 	Repeater {
 		id: workspaceRepeater
 		property var thisMonitor: Hyprland.monitorFor(screenWindow.screen)
@@ -18,7 +19,7 @@ RowLayout {
 
 		RoundButton {
 			property var workspace: modelData
-			property bool isActive: Hyprland.focusedWorkspace?.id == workspace.id
+			property bool isActive: workspaceRepeater.thisMonitor.activeWorkspace.id == workspace.id
 			onClicked: {
 				console.log("Switching to workspace " + workspace.id)
 				Hyprland.dispatch("workspace " + workspace.id)
@@ -32,15 +33,15 @@ RowLayout {
 				
 				Behavior on color {
 					ColorAnimation {
-						duration: 200
-						easing.type: Easing.InOutQuad
+						duration: 150
+						easing.type: Easing.InOutCubic
 					}
 				}
 
 				Behavior on implicitWidth {
 					NumberAnimation {
-						duration: 200
-						easing.type: Easing.InOutQuad
+						duration: 150
+						easing.type: Easing.InOutCubic
 					}
 				}
 			}
@@ -55,8 +56,8 @@ RowLayout {
 
 				Behavior on color {
 					ColorAnimation {
-						duration: 200
-						easing.type: Easing.InOutQuad
+						duration: 150
+						easing.type: Easing.InOutCubic
 					}
 				}
 			}

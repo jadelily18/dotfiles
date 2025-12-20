@@ -1,14 +1,18 @@
-import Quickshell
-import Quickshell.Io
-import Quickshell.Widgets
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Effects
+import Quickshell
+import Quickshell.Io
+import Quickshell.Widgets
+import Quickshell.Services.Mpris
+
 import qs.Widgets
 
 Scope {
 	id: root
 	
+	property var colorPrimary: "#f5c2e7"
 	property var colorText: "#cdd6f4"
 	property var colorSubtext: "#a6adc8"
 	property var colorBase: "#1e1e2e"
@@ -22,7 +26,6 @@ Scope {
 			PanelWindow {
 				id: screenWindow
 				required property var modelData
-				// property var screen: modelData
 				screen: modelData
 
 				color: "transparent"
@@ -49,56 +52,113 @@ Scope {
 					radius: 9999
 
 					RowLayout {
-						anchors.fill: parent
-						Layout.margins: 10
-						spacing: 10
-
+						anchors {
+							fill: parent
+							margins: 4
+							leftMargin: 8
+							rightMargin: 8
+						}
+						uniformCellSizes: true
+						
 						RowLayout {
-							Layout.fillWidth: true
-							Layout.fillHeight: true
-							Layout.margins: 4
-							Layout.leftMargin: 8
-							Layout.rightMargin: 8
-							
-							RowLayout {
-								Layout.fillWidth: true
+							spacing: 16
+							RoundButton {
+								id: menuButton
 								Layout.fillHeight: true
-								
-								RoundButton {
-									id: menuButton
-									Layout.fillHeight: true
 
-									background: Rectangle {
-										// id: menuButtonBg
-										color: parent.down ? colorCrust : (parent.hovered ? colorMantle : "transparent")
-										radius: 9999
+								background: Rectangle {
+									// id: menuButtonBg
+									color: parent.down ? colorCrust : (parent.hovered ? colorMantle : "transparent")
+									radius: 9999
+								}
+
+								contentItem: IconImage {
+									source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/heart.svg"
+									implicitSize: 20
+									layer.enabled: true
+									layer.effect: MultiEffect {
+										colorization: 1
+										colorizationColor: menuButton.hovered ? colorPrimary : colorText
+
+										Behavior on colorizationColor {
+											ColorAnimation {
+												duration: 200
+												easing.type: Easing.InOutQuad
+											}
+										}
 									}
+								}
+							}
+							
+							Workspaces { }
+							
+							Row {
+								property var player: Mpris.players.values[0]
+								spacing: 4
+								
+								IconImage {
+									source: parent.player.isPlaying ? 
+										"file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/pause-circle.svg"
+										: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/play-circle.svg"
+									implicitSize: 20
+									layer.enabled: true
+									layer.effect: MultiEffect {
+										colorization: 1
+										colorizationColor: menuButton.hovered ? colorPrimary : colorText
 
-									contentItem: IconImage {
-										source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/heart.svg"
-										implicitSize: 20
-										// width: 24
-										// height: 24
-										// fillMode: Image.PreserveAspectFit
-										// anchors.verticalCenter: parent.verticalCenter
+										Behavior on colorizationColor {
+											ColorAnimation {
+												duration: 200
+												easing.type: Easing.InOutQuad
+											}
+										}
 									}
 								}
 								
-								Workspaces { }
-							}
+								Text {
+									text: formatPlayerInfo()
+									color: colorText
 
-							RowLayout {
-								Layout.fillWidth: true
-								Layout.fillHeight: true
-								Clock { }
-							}
+									function formatPlayerInfo() {
+										const player = parent.player
+										let playerString = "" 
 
-							RowLayout {
-								Layout.fillWidth: true
-								Layout.fillHeight: true
+										if (player.trackTitle) {
+											playerString += player.trackTitle
+										}
+										if (player.trackArtist) {
+											if (playerString.length > 0) {
+												playerString += " - "
+											}
+											playerString += player.trackArtist
+										}
+										if (player.trackAlbum) {
+											if (playerString.length > 0) {
+												playerString += " // "
+											}
+											playerString += player.trackAlbum
+										}
+										return playerString
+									}
+								}
 							}
 						}
-						
+
+						RowLayout {
+							// Layout.fillWidth: true
+							// Layout.fillHeight: true
+							Layout.alignment: Qt.AlignHCenter
+							Clock { }
+						}
+
+						RowLayout {
+							// Layout.fillWidth: true
+							// Layout.fillHeight: true
+							Layout.alignment: Qt.AlignRight
+							RoundButton {
+								text: ">:3"
+							}
+						}
 					}
 				}
 
