@@ -185,7 +185,7 @@ in
       "com.google.Chrome"
       "io.github.java_decompiler.jd-gui"
       "org.vinegarhq.Sober"
-      # "com.modrinth.ModrinthApp"
+      "app.xmcl.voxelum"
       "com.usebruno.Bruno"
     ];
   };
@@ -220,6 +220,8 @@ in
     };
   };
 
+  services.geoclue2.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages =
@@ -235,6 +237,8 @@ in
       efibootmgr
       hyprpolkitagent
       (inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default)
+      jq # just for privacy dots
+      dbus # just for privacy dots
     ]
     ++ (with pkgs.kdePackages; [
       qtsvg

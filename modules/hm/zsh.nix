@@ -37,6 +37,7 @@ in
         "cd" = "z";
         "zshsrc" = "source ~/.zshrc";
         "zed" = "zeditor";
+        "icat" = "kitten icat";
 
         # docker
         "dc" = "docker compose";

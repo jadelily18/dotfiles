@@ -132,7 +132,7 @@ in
       exec-once = [
         "systemctl --user start hyprpolkitagent"
         "waybar"
-        "hyprpaper"
+        "systemctl --user start hyprpaper"
         "swaync -c ~/dotfiles/modules/hm/swaync/config.json -s ~/dotfiles/modules/hm/swaync/style.css"
         "uair"
         "wl-paste --type text --watch cliphist store"
@@ -335,7 +335,7 @@ in
       prismlauncher
       modrinth-app
       smile
-      # davinci-resolve doesn't work properly and I don't want to fix it right now
+      davinci-resolve # doesn't work properly and I don't want to fix it right now
 
       heroic
       lutris
@@ -386,6 +386,7 @@ in
       bambu-studio
       orca-slicer
       freecad-wayland
+      gnome-weather
 
       #! Hyprland stuff
       swaynotificationcenter
@@ -456,6 +457,10 @@ in
           {
             trigger = ":mrdelay";
             replace = "Apologies for the delay; we're doing our best to get to all projects as soon as possible!";
+          }
+          {
+            trigger = ":mrholidelay";
+            replace = "Apologies for the delay! Moderation is currently delayed due to the holidays, but we're doing our best to get it resolved as soon as possible!";
           }
           {
             trigger = ":mrfixed";

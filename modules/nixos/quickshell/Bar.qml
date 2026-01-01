@@ -12,7 +12,15 @@ import qs.Widgets
 Scope {
 	id: root
 	
-	property var colorPrimary: "#f5c2e7"
+	property var colorPink: "#f5c2e7"
+	property var colorRed: "#f38ba8"
+	property var colorGreen: "#a6e3a1"
+	property var colorYellow: "#f9e2af"
+	property var colorBlue: "#89b4fa"
+	property var colorOrange: "#fab387"
+	property var colorPurple: "#cba6f7"
+
+	property var colorPrimary: colorPink
 	property var colorText: "#cdd6f4"
 	property var colorSubtext: "#a6adc8"
 	property var colorBase: "#1e1e2e"
@@ -104,7 +112,7 @@ Scope {
 									layer.enabled: true
 									layer.effect: MultiEffect {
 										colorization: 1
-										colorizationColor: menuButton.hovered ? colorPrimary : colorText
+										colorizationColor: colorText
 
 										Behavior on colorizationColor {
 											ColorAnimation {
@@ -149,6 +157,7 @@ Scope {
 							// Layout.fillHeight: true
 							Layout.alignment: Qt.AlignHCenter
 							Clock { }
+							PrivacyDots { }
 						}
 
 						RowLayout {
@@ -156,7 +165,16 @@ Scope {
 							// Layout.fillHeight: true
 							Layout.alignment: Qt.AlignRight
 							RoundButton {
-								text: ">:3"
+								text: "power mode"
+							}
+							RoundButton {
+								text: "tray"
+							}
+							RoundButton {
+								text: "audio/volume"
+							}
+							RoundButton {
+								text: "notifications"
 							}
 						}
 					}
