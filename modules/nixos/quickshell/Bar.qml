@@ -154,30 +154,20 @@ Scope {
 						}
 
 						RowLayout {
-							// Layout.fillWidth: true
-							// Layout.fillHeight: true
 							Layout.alignment: Qt.AlignHCenter
 							Clock { }
 							PrivacyDots { }
 						}
 
 						RowLayout {
-							// Layout.fillWidth: true
-							// Layout.fillHeight: true
-							
-
 							Layout.alignment: Qt.AlignRight
 							RoundButton {
 								text: "power mode"
 							}
-							// RoundButton {
-							// 	text: "tray"
-							// }
 
 							RowLayout {
 								id: sysTray
 								Layout.fillHeight: true
-								// Layout.alignment: Qt.AlignHCenter | Qt.AlignRight
 								visible: SystemTray.items.values.length > 0
 
 								ClippingRectangle {
@@ -203,13 +193,12 @@ Scope {
 												const absolutePosition = this.mapToGlobal(0, 0)
 												return {
 													x: absolutePosition.x,
-													y: absolutePosition.y + 36 // screenWindow.height // below screen window
+													y: absolutePosition.y + 36 // below screen window
 												}
 											}
 
 
 											background: Rectangle {
-												// color: parent.down ? colorCrust : (parent.hovered ? colorMantle : "transparent")
 												color: parent.down ? colorMantle : (parent.hovered ? colorBase : "transparent")
 												radius: 9999
 											}
@@ -242,18 +231,6 @@ Scope {
 														}
 													}
 												}
-												
-												// layer.effect: MultiEffect {
-												// 	colorization: 1
-												// 	colorizationColor: parent.hovered ? colorPrimary : colorText
-
-												// 	Behavior on colorizationColor {
-												// 		ColorAnimation {
-												// 			duration: 200
-												// 			easing.type: Easing.InOutQuad
-												// 		}
-												// 	}
-												// }
 											}
 										}
 									}
