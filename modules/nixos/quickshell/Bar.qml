@@ -7,6 +7,7 @@ import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
 import Quickshell.Services.SystemTray
+import Quickshell.Services.Pipewire
 
 import qs.Widgets
 
@@ -236,9 +237,64 @@ Scope {
 									}
 								}
 							}
+							
+							// RoundButton {
+							// 	text: "audio/volume"
+							// }
+							
 							RoundButton {
-								text: "audio/volume"
+								id: volumeButton
+								property var transitionDuration: 200
+								// color: this.down ? colorMantle : (this.hovered ? colorBase : "transparent")
+								visible: Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio
+
+								PwObjectTracker {
+									objects: [ Pipewire.defaultAudioSink ]
+								}
+
+								background: Rectangle {
+									color: parent.down ? colorCrust : (parent.hovered ? colorMantle : "transparent")
+									radius: 9999
+								}
+
+								contentItem: RowLayout {
+									Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+									// Layout.leftMargin: 4
+									// Layout.rightMargin: 4
+									spacing: 4
+
+									IconImage {
+										source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/speaker-wave.svg"
+										implicitSize: 16
+										layer.enabled: true
+										layer.effect: MultiEffect {
+											colorization: 1
+											colorizationColor: volumeButton.hovered ? colorPrimary : colorText
+
+											Behavior on colorizationColor {
+												ColorAnimation {
+													duration: volumeButton.transitionDuration
+													easing.type: Easing.InOutQuad
+												}
+											}
+										}
+									}
+
+									Text {
+										text: Math.round(Pipewire.defaultAudioSink.audio.volume * 100) + "%"
+										font.weight: Font.Bold
+										color: volumeButton.hovered ? colorPrimary : colorText
+
+										Behavior on color {
+											ColorAnimation {
+												duration: volumeButton.transitionDuration
+												easing.type: Easing.InOutQuad
+											}
+										}
+									}
+								}
 							}
+							
 							RoundButton {
 								text: "notifications"
 							}
