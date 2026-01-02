@@ -15,7 +15,10 @@ Row {
 		command: ["/home/jade/dotfiles/modules/nixos/quickshell/scripts/privacy_dots/privacy_dots.sh"]
 		running: true
 		stdout: StdioCollector {
-			onStreamFinished: privDotsWidget.dotsStatus = this.text
+			onStreamFinished: () => {
+				privDotsWidget.dotsStatus = this.text
+				// console.log("Privacy dots: " + this.text)
+			}
 		}
 	}
 
@@ -39,7 +42,7 @@ Row {
 		IconImage {
 			source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/microphone.svg"
 			implicitSize: 16
-			visible: dotsContainer.dotsData.mic == "true"
+			visible: dotsContainer.dotsData.mic === "true"
 
 			layer.enabled: true
 			layer.effect: MultiEffect {
@@ -58,7 +61,7 @@ Row {
 		IconImage {
 			source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/video-camera.svg"
 			implicitSize: 16
-			visible: dotsContainer.dotsData.cam == "true"
+			visible: dotsContainer.dotsData.cam === "true"
 
 			layer.enabled: true
 			layer.effect: MultiEffect {
@@ -77,7 +80,7 @@ Row {
 		IconImage {
 			source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/globe-alt.svg"
 			implicitSize: 16
-			visible: dotsContainer.dotsData.loc == "true"
+			visible: dotsContainer.dotsData.loc === "true"
 
 			layer.enabled: true
 			layer.effect: MultiEffect {
@@ -96,7 +99,7 @@ Row {
 		IconImage {
 			source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/computer-desktop.svg"
 			implicitSize: 16
-			visible: dotsContainer.dotsData.scr == "true"
+			visible: dotsContainer.dotsData.scr === "true"
 
 			layer.enabled: true
 			layer.effect: MultiEffect {
