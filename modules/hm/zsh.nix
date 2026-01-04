@@ -57,6 +57,7 @@ in
         "gaa" = "git add --all";
 
         "nixconf" = "code ~/dotfiles";
+        "dotfiles" = "z ~/dotfiles";
       };
 
       initContent = ''

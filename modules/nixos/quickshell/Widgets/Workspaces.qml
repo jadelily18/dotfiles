@@ -27,20 +27,20 @@ RowLayout {
 			}
 
 			background: Rectangle {
-				color: isActive ? root.colorText : (parent.hovered ? root.colorSubtext : "transparent")
+				color: isActive ? colorText : (parent.hovered ? colorPrimaryRaised : "transparent")
 				implicitWidth: isActive ? 54 : 32
 				radius: 9999
 				
 				Behavior on color {
 					ColorAnimation {
-						duration: 150
+						duration: 200
 						easing.type: Easing.InOutCubic
 					}
 				}
 
 				Behavior on implicitWidth {
 					NumberAnimation {
-						duration: 150
+						duration: 200
 						easing.type: Easing.InOutCubic
 					}
 				}
@@ -52,17 +52,15 @@ RowLayout {
 				font.weight: Font.Bold
 				horizontalAlignment: Text.AlignHCenter
 				verticalAlignment: Text.AlignVCenter
-				color: isActive ? root.colorBase : (parent.hovered ? root.colorBase : root.colorText)
+				color: isActive ? colorBase : (parent.hovered ? colorPrimary : colorText)
 
 				Behavior on color {
 					ColorAnimation {
-						duration: 150
+						duration: 200
 						easing.type: Easing.InOutCubic
 					}
 				}
 			}
-
-			// color: isActive ? root.colorText : root.colorMantle
 		}
 	}
 }

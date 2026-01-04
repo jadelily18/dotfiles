@@ -47,7 +47,7 @@ Row {
 			layer.enabled: true
 			layer.effect: MultiEffect {
 				colorization: 1
-				colorizationColor: root.colorOrange
+				colorizationColor: colorOrange
 
 				Behavior on colorizationColor {
 					ColorAnimation {
@@ -66,7 +66,7 @@ Row {
 			layer.enabled: true
 			layer.effect: MultiEffect {
 				colorization: 1
-				colorizationColor: root.colorRed
+				colorizationColor: colorRed
 
 				Behavior on colorizationColor {
 					ColorAnimation {
@@ -85,7 +85,7 @@ Row {
 			layer.enabled: true
 			layer.effect: MultiEffect {
 				colorization: 1
-				colorizationColor: root.colorBlue
+				colorizationColor: colorBlue
 
 				Behavior on colorizationColor {
 					ColorAnimation {
@@ -104,7 +104,7 @@ Row {
 			layer.enabled: true
 			layer.effect: MultiEffect {
 				colorization: 1
-				colorizationColor: root.colorPurple
+				colorizationColor: colorPurple
 
 				Behavior on colorizationColor {
 					ColorAnimation {

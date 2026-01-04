@@ -12,22 +12,32 @@ import Quickshell.Services.Pipewire
 import qs.Widgets
 
 Scope {
-	id: root
+	id: bar
 	
-	property var colorPink:    "#f5c2e7"
-	property var colorRed:     "#f38ba8"
-	property var colorGreen:   "#a6e3a1"
-	property var colorYellow:  "#f9e2af"
-	property var colorBlue:    "#89b4fa"
-	property var colorOrange:  "#fab387"
-	property var colorPurple:  "#cba6f7"
+	// Colors based on Catppuccin Mocha
+	property var colorPink:          Qt.hsla(316 / 360, 0.72, 0.86, 1)
+	property var colorPinkRaised:    Qt.hsla(316 / 360, 0.3, 0.22, 1)
+	property var colorRed:           "#f38ba8"
+	property var colorGreen:         "#a6e3a1"
+	property var colorYellow:        "#f9e2af"
+	property var colorBlue:          "#89b4fa"
+	property var colorOrange:        "#fab387"
+	property var colorPurple:        "#cba6f7"
 
-	property var colorPrimary: colorPink
-	property var colorText:    "#cdd6f4"
-	property var colorSubtext: "#a6adc8"
-	property var colorBase:    "#1e1e2e"
-	property var colorMantle:  "#181825"
-	property var colorCrust:   "#11111b"
+	property var colorPrimary:       colorPink
+	property var colorPrimaryRaised: colorPinkRaised
+	property var colorText:          "#cdd6f4"
+	property var colorSubtext1:      "#bac2de"
+	property var colorSubtext0:      "#a6adc8"
+	property var colorOverlay2:      "#9399b2"
+	property var colorOverlay1:      "#7f849c"
+	property var colorOverlay0:      "#6c7086"
+	property var colorSurface2:      "#585b70"
+	property var colorSurface1:      "#45475a"
+	property var colorSurface0: 		 "#313244"
+	property var colorBase:          "#1e1e2e"
+	property var colorMantle:        "#181825"
+	property var colorCrust:         "#11111b"
 
 	Variants {
 		model: Quickshell.screens;
@@ -40,6 +50,12 @@ Scope {
 
 				color: "transparent"
 
+				Component.onCompleted: {
+					if (this.WlrLayershell != null) {
+						this.WlrLayershell.layer = WlrLayer.Bottom;
+					}
+				}
+
 				margins {
 					left: 20
 					right: 20
@@ -51,13 +67,100 @@ Scope {
 					right: true
 				}
 
+				PopupWindow {
+					id: volumeMixer
+					width: 600
+
+					height: 400
+
+					Component.onCompleted: {
+						if (this.WlrLayershell != null) {
+							this.WlrLayershell.layer = WlrLayer.Bottom;
+							this.WlrLayershell.namespace = "quickshell-volume-mixer";
+						}
+					}
+
+					color: "transparent"
+
+					anchor.window: screenWindow
+					anchor.rect.x: screenWindow.width - volumeMixer.width
+					anchor.rect.y: screenWindow.height + 20
+
+					visible: volumeMixerBg.opacity > 0
+
+					ClippingRectangle {
+						id: volumeMixerBg
+
+						property var transitionDuration: 100
+
+						anchors.fill: parent
+						color: colorBase
+						opacity: 0
+
+						radius: 20
+						
+						MultiEffect {
+							layer.enabled: true
+							blur: 1
+						}
+
+						Behavior on opacity {
+							NumberAnimation {
+								duration: transitionDuration
+								easing.type: Easing.InOutQuad
+							}
+						}
+
+						Behavior on scale {
+							NumberAnimation {
+								duration: transitionDuration
+								easing.type: Easing.InOutQuad
+							}
+						}
+
+						ScrollView {
+							anchors.fill: parent
+							anchors.margins: 12
+
+							contentWidth: availableWidth
+
+							ColumnLayout {
+								anchors.fill: parent
+								// Text {
+								// 	text: "Volume Mixer"
+								// 	color: colorText
+								// 	font.pixelSize: 24
+								// 	font.weight: Font.Bold
+								// }
+								spacing: 20
+
+								PwNodeLinkTracker {
+									id: nodeLinkTracker
+									node: Pipewire.defaultAudioSink
+								}
+
+								VolumeMixerEntry {
+									node: Pipewire.defaultAudioSink
+									label: "Output Device"
+								}
+
+								Repeater {
+									model: nodeLinkTracker.linkGroups
+
+									VolumeMixerEntry {
+										required property PwLinkGroup modelData
+										node: modelData.source
+									}
+								}
+							}
+						}
+					}
+				}
+
 				ClippingRectangle {
 					anchors.fill: parent
 					color: colorBase
-					opacity: 0.85
-
-					Layout.fillWidth: true
-					Layout.fillHeight: true
+					opacity: 0.8
 
 					radius: 9999
 
@@ -171,6 +274,7 @@ Scope {
 								Layout.fillHeight: true
 								visible: SystemTray.items.values.length > 0
 
+								// uNDefiNeD BeHAviOr >:(
 								ClippingRectangle {
 									anchors.fill: parent
 									radius: 9999
@@ -291,6 +395,16 @@ Scope {
 												easing.type: Easing.InOutQuad
 											}
 										}
+									}
+								}
+								
+								onClicked: {
+									if (volumeMixer.visible) {
+										volumeMixerBg.scale = 0
+										volumeMixerBg.opacity = 0
+									} else {
+										volumeMixerBg.scale = 1
+										volumeMixerBg.opacity = 0.65
 									}
 								}
 							}

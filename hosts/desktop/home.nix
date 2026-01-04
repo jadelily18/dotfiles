@@ -52,6 +52,16 @@ in
         "HYPRCURSOR_SIZE,              24"
         "XCURSOR_SIZE,                 24"
       ];
+      layerrule = [
+        "blur, quickshell"
+        "blurpopups, quickshell"
+        "ignorezero, quickshell"
+
+        "blur, swaync-control-center"
+        "blur, swaync-notification-window"
+        "ignorezero, swaync-control-center"
+        "ignorezero, swaync-notification-window"
+      ];
       bindm = [
         "$mod, mouse:273, resizewindow"
         "$mod, mouse:272, movewindow"
@@ -147,8 +157,15 @@ in
 
         blur = {
           enabled = true;
-          xray = true;
-          size = 16;
+          xray = false;
+          # size = 16;
+          passes = 2;
+          new_optimizations = true;
+          popups = true;
+          # blurls = [
+          #   "quickshell"
+          #   "sway-notification-center"
+          # ];
         };
       };
       misc = {
@@ -387,6 +404,7 @@ in
       orca-slicer
       freecad-wayland
       gnome-weather
+      caligula
 
       #! Hyprland stuff
       swaynotificationcenter
