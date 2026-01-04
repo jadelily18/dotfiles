@@ -9,6 +9,7 @@ import Quickshell.Services.Pipewire
 ColumnLayout {
 	required property PwNode node
 	property string label
+	property int transitionDuration: 200
 	Layout.fillWidth: true
 
 	PwObjectTracker {
@@ -60,17 +61,18 @@ ColumnLayout {
 			}
 
 			contentItem: RowLayout {
+				property var buttonContentColor: node.audio.muted ? colorRed : (muteButton.hovered ? colorPrimary : colorText)
 				IconImage {
 					source: node.audio.muted ? "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/speaker-x-mark.svg" : "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/speaker-wave.svg"
 					implicitSize: 20
 					layer.enabled: true
 					layer.effect: MultiEffect {
 						colorization: 1
-						colorizationColor: muteButton.hovered ? colorPrimary : colorText
+						colorizationColor: parent.buttonContentColor
 
 						Behavior on colorizationColor {
 							ColorAnimation {
-								duration: muteButton.transitionDuration
+								duration: transitionDuration
 								easing.type: Easing.InOutQuad
 							}
 						}
@@ -79,8 +81,16 @@ ColumnLayout {
 
 				Text {
 					text: Math.round(node.audio.volume * 100) + "%"
-					color: muteButton.hovered ? colorPrimary : colorText
 					font.weight: Font.Bold
+
+					color: parent.buttonContentColor
+
+					Behavior on color {
+						ColorAnimation {
+							duration: transitionDuration
+							easing.type: Easing.InOutQuad
+						}
+					}
 				}
 			}
 		}
@@ -108,7 +118,14 @@ ColumnLayout {
 					height: parent.height
 					radius: 9999
 
-					color: colorPrimary
+					color: node.audio.muted ? colorOverlay2 : colorPrimary
+
+					Behavior on color {
+						ColorAnimation {
+							duration: transitionDuration
+							easing.type: Easing.InOutQuad
+						}
+					}
 				}
 			}
 
@@ -123,7 +140,7 @@ ColumnLayout {
 
 				Behavior on color {
 					ColorAnimation {
-						duration: 100
+						duration: transitionDuration / 2
 						easing.type: Easing.InOutQuad
 					}
 				}
