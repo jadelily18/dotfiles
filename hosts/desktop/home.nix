@@ -53,14 +53,14 @@ in
         "XCURSOR_SIZE,                 24"
       ];
       layerrule = [
-        "blur, quickshell"
-        "blurpopups, quickshell"
-        "ignorezero, quickshell"
+        "blur on, match:namespace quickshell"
+        "blur_popups on, match:namespace quickshell"
+        "ignore_alpha 0.001, match:namespace quickshell"
 
-        "blur, swaync-control-center"
-        "blur, swaync-notification-window"
-        "ignorezero, swaync-control-center"
-        "ignorezero, swaync-notification-window"
+        "blur on, match:namespace swaync-control-center"
+        "blur on, match:namespace swaync-notification-window"
+        "ignore_alpha 0.001 on, match:namespace swaync-control-center"
+        "ignore_alpha 0.001, match:namespace swaync-notification-window"
       ];
       bindm = [
         "$mod, mouse:273, resizewindow"
@@ -141,8 +141,8 @@ in
       ];
       exec-once = [
         "systemctl --user start hyprpolkitagent"
-        "waybar"
         "systemctl --user start hyprpaper"
+        "waybar"
         "swaync -c ~/dotfiles/modules/hm/swaync/config.json -s ~/dotfiles/modules/hm/swaync/style.css"
         "uair"
         "wl-paste --type text --watch cliphist store"
@@ -187,6 +187,20 @@ in
 
   services.hyprpaper = {
     enable = true;
+    settings = {
+      ipc = "on";
+      splash = false;
+      preload = [
+        "/home/jade/dotfiles/files/wallpapers/rayquaza_catppuccin.png"
+        "/home/jade/dotfiles/files/wallpapers/nixos-mocha-wallpaper.png"
+      ];
+      wallpaper = [
+        {
+          monitor = "";
+          path = "/home/jade/dotfiles/files/wallpapers/rayquaza_catppuccin.png";
+        }
+      ];
+    };
   };
 
   programs.waybar = {
@@ -316,6 +330,8 @@ in
         "text/html" = [ "zen-beta.desktop" ];
         "application/pdf" = [ "org.gnome.Evince.desktop" ];
         "image/*" = [ "org.gnome.Loupe.desktop" ];
+        "image/png" = [ "org.gnome.Loupe.desktop" ];
+        "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
         "video/*" = [ "vlc.desktop" ];
         "audio/*" = [ "vlc.desktop" ];
         "application/zip" = [ "org.gnome.FileRoller.desktop" ];
@@ -344,7 +360,7 @@ in
           --add-flags "--password-store=gnome-libsecret"
         '';
       })
-      nixfmt-rfc-style
+      nixfmt
       xclip
       nixos-generators
       steam
@@ -405,6 +421,10 @@ in
       freecad-wayland
       gnome-weather
       caligula
+      ncspot
+      ghostty
+
+      # jetbrains.idea
 
       #! Hyprland stuff
       swaynotificationcenter
@@ -435,7 +455,13 @@ in
 
       # fonts
       (inputs.apple-fonts.packages.${system}.sf-pro-nerd)
+
+      javaPackages.compiler.openjdk25 # temporary
     ]
+    ++ (with pkgs.jetbrains; [
+      idea
+      datagrip
+    ])
     ++ (import ../../modules/pkgs/packages.nix { inherit pkgs; })
     ++ (import ../../modules/pkgs/development.nix { inherit pkgs; });
 
@@ -451,6 +477,7 @@ in
     qt.enable = false;
     zen-browser.enable = false;
     spicetify.enable = false;
+    hyprpaper.enable = lib.mkForce false;
   };
 
   services.espanso = {
@@ -522,6 +549,10 @@ We ask that you resubmit your project for review, we appreciate your patience an
           {
             trigger = ":mrvt";
             replace = "(This is from [Vanilla Tweaks](https://vanillatweaks.net), so you must link back there)";
+          }
+          {
+            trigger = ":mrproj";
+            replace = "https://modrinth.com/project/";
           }
         ];
       };

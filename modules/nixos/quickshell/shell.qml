@@ -39,6 +39,8 @@ Scope {
 
 	ReloadPopup { }
 
+	Notification {  }
+
 	Bar {}
 	
 }
