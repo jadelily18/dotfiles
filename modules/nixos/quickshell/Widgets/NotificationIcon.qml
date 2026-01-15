@@ -13,11 +13,19 @@ Row {
 		sourceSize.height: 75
 	}
 
-	Image {
-		source: notifImageSrc
+	ClippingRectangle {
 		visible: notifImageSrc != "" && notifAppIconSrc == ""
-		sourceSize.width: 55
-		sourceSize.height: 55
+		width: 75
+		height: 75
+
+		radius: 20
+		
+		color: "transparent"
+
+		Image {
+			anchors.fill: parent
+			source: notifImageSrc
+		}
 	}
 
 	Item {

@@ -190,13 +190,17 @@ in
     ];
   };
 
+  services.tailscale.enable = true;
+
   networking.firewall = rec {
     enable = true;
     allowedTCPPorts = [
       5173
+      5520
     ];
     allowedUDPPorts = [
       5173
+      5520
     ];
 
     allowedTCPPortRanges = [

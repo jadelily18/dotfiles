@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
@@ -13,6 +14,9 @@ Scope {
 
 	property var notification
 	property int notificationCount: notifServer.trackedNotifications.values.length
+
+	property bool showHoverBackground: false
+	// property alias hovered: notificationHoverHandler.hovered
 
 	function expireNotification() {
 		notificationLoader.active = false
@@ -73,9 +77,9 @@ Scope {
 
 				opacity: 0.85
 
-				radius: 30
+				radius: 24
 
-				color: mouseArea.containsMouse ? colorMantle : colorBase 
+				color: showHoverBackground ? colorMantle : colorBase 
 
 				Behavior on color {
 					ColorAnimation {
@@ -84,12 +88,65 @@ Scope {
 					}
 				}
 
+				// This is purely for the progress bar.
+				HoverHandler {
+					id: notificationHoverHandler
+				}
+
 				MouseArea {
 					id: mouseArea
 					anchors.fill: parent
+					hoverEnabled: true
 					onClicked: dismissNotification()
 
-					hoverEnabled: true
+					onEntered: {
+						showHoverBackground = true
+					}
+					onExited: {
+						showHoverBackground = false
+					}
+				}
+				
+				RoundButton {
+					opacity: notificationHoverHandler.hovered ? 1 : 0
+					visible: opacity > 0
+
+					onClicked: dismissNotification()
+
+					anchors {
+						top: parent.top
+						right: parent.right
+						margins: 16
+					}
+
+					Behavior on opacity {
+						NumberAnimation {
+							duration: 200
+							easing.type: Easing.InOutQuad
+						}
+					}
+
+					background: ClippingRectangle {
+						color: parent.pressed ? colorCrust : (parent.hovered ? colorMantle : "transparent")
+						radius: 9999
+
+						Behavior on color {
+							ColorAnimation {
+								duration: 200
+								easing.type: Easing.InOutQuad
+							}
+						}
+					}
+
+					contentItem: IconImage {
+						source: "file:///home/jade/dotfiles/modules/nixos/quickshell/assets/heroicons/x-mark.svg"
+						implicitSize: 20
+						layer.enabled: true
+						layer.effect: MultiEffect {
+							colorization: 1
+							colorizationColor: colorText
+						}
+					}
 				}
 				
 				ColumnLayout {
@@ -97,7 +154,6 @@ Scope {
 					anchors {
 						fill: parent
 						top: parent.top
-						// topMargin: 20
 					}
 
 					spacing: 0
@@ -148,6 +204,10 @@ Scope {
 								textFormat: Text.MarkdownText
 
 								Layout.fillWidth: true
+
+								HoverHandler {
+									id: bodyHoverHandler
+								}
 							}
 						}
 					}
@@ -167,12 +227,12 @@ Scope {
 							RoundButton {
 								id: actionButton
 								text: modelData.text
-								// Layout.margins: 8
 								Layout.fillWidth: true
-
-								onClicked: {
+								
+								onClicked: (mouse) => {
 									modelData.invoke()
 									dismissNotification()
+									mouse.accepted = false
 								}
 
 								background: Rectangle {
@@ -200,6 +260,8 @@ Scope {
 					}
 				}
 				
+				
+				
 				Rectangle {
 					id: loadingBar
 					color: colorPrimary
@@ -217,11 +279,10 @@ Scope {
 						property: "width"
 						from: rect.width
 						to: 0
-						// duration: reloadPopupRoot.failed ? 10000: 3500
 						duration: notification.expireTimeout < 1 ? 8000 : notification.expireTimeout * 1000
 						onFinished: expireNotification()
 
-						paused: mouseArea.containsMouse
+						paused: notificationHoverHandler.hovered
 					}
 				}
 				Component.onCompleted: loadingBarAnim.start()

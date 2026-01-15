@@ -423,6 +423,9 @@ in
       caligula
       ncspot
       ghostty
+      trayscale
+
+      fish # trying it out
 
       # jetbrains.idea
 
