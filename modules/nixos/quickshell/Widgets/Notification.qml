@@ -19,13 +19,13 @@ Scope {
 	// property alias hovered: notificationHoverHandler.hovered
 
 	function expireNotification() {
-		notificationLoader.active = false
 		notification.expire()
+		notificationLoader.active = false
 	}
 
 	function dismissNotification() {
-		notificationLoader.active = false
 		notification.dismiss()
+		notificationLoader.active = false
 	}
 	
 	Connections {
