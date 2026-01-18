@@ -16,6 +16,7 @@ in
     inputs.self.homeModules.default
     inputs.spicetify-nix.homeManagerModules.spicetify
     inputs.zen-browser.homeModules.beta
+    inputs.dms.homeModules.dank-material-shell
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -57,10 +58,19 @@ in
         "blur_popups on, match:namespace quickshell"
         "ignore_alpha 0.001, match:namespace quickshell"
 
+        "blur on, match:class org.quickshell"
+        "blur_popups on, match:class org.quickshell"
+        "ignore_alpha 0.3, match:class org.quickshell"
+
         "blur on, match:namespace swaync-control-center"
         "blur on, match:namespace swaync-notification-window"
-        "ignore_alpha 0.001 on, match:namespace swaync-control-center"
+        "ignore_alpha 0.001, match:namespace swaync-control-center"
         "ignore_alpha 0.001, match:namespace swaync-notification-window"
+
+        # "blur on, match:namespace ^(dms)$"
+        # "blur_popups on, match:namespace ^(dms)$"
+        # "ignore_alpha 0.001, match:namespace ^(dms)$"
+        "no_anim on, match:namespace ^(dms)$"
       ];
       bindm = [
         "$mod, mouse:273, resizewindow"
@@ -74,7 +84,7 @@ in
         "$mod,       T,         exec, kitty"
         "$mod,       Semicolon, exec, smile" # Emoji picker
         "$mod,       E,         exec, rofimoji -r 💖 --use-icons" # Better emoji picker
-        "$mod,       Space,     exec, rofi -show drun -display-drun ♥ -show-icons" # App launcher
+        # "$mod,       Space,     exec, rofi -show drun -display-drun ♥ -show-icons" # App launcher
         "$mod,       B,         exec, ${myPkgs.rofi-bookmarks-zen}/bin/main | rofi -dmenu -p \"bark! wruff!\" -show-icons" # Bookmarks
         "$mod SHIFT, C,         exec, hyprpicker -a" # Color picker
         "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
@@ -138,12 +148,29 @@ in
         "$mod SHIFT, 8, movetoworkspace, 8"
         "$mod SHIFT, 9, movetoworkspace, 9"
         "$mod SHIFT, 0, movetoworkspace, 10"
+
+        ## Dank Material Shell
+
+        "$mod, space, exec, dms ipc call spotlight toggle"
+        "$mod, V, exec, dms ipc call clipboard toggle"
+        "$mod, M, exec, dms ipc call processlist focusOrToggle"
+        "$mod, comma, exec, dms ipc call settings focusOrToggle"
+        "$mod, N, exec, dms ipc call notifications toggle"
+        "$mod, Y, exec, dms ipc call dankdash wallpaper"
+        "$mod, TAB, exec, dms ipc call hypr toggleOverview"
+
+        "$mod ALT, L, exec, dms ipc call lock lock"
+      ];
+      source = [
+        # "source = ~/.config/hypr/dms/colors.conf"
+        # "source = ~/.config/hypr/dms/layout.conf;"
+        # "source = ~/.config/hypr/dms/outputs.con;f"
       ];
       exec-once = [
         "systemctl --user start hyprpolkitagent"
         "systemctl --user start hyprpaper"
-        "waybar"
-        "swaync -c ~/dotfiles/modules/hm/swaync/config.json -s ~/dotfiles/modules/hm/swaync/style.css"
+        # "waybar"
+        # "swaync -c ~/dotfiles/modules/hm/swaync/config.json -s ~/dotfiles/modules/hm/swaync/style.css"
         "uair"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
@@ -181,8 +208,47 @@ in
         "size 750 550,class:^(org.pulseaudio.pavucontrol)$"
         "move 1500 70,class:^(org.pulseaudio.pavucontrol)$"
         "pin,class:^(org.pulseaudio.pavucontrol)$"
+
+        # Opacity for inactive windows
+        "opacity 0.9 0.9, floating:0, focus:0"
+
+        # GNOME apps
+        "rounding 12, class:^(org\\.gnome\\.)"
+        "noborder, class:^(org\\.gnome\\.)"
+
+        # Terminal apps - no borders
+        "noborder, class:^(org\\.wezfurlong\\.wezterm)$"
+        "noborder, class:^(Alacritty)$"
+        "noborder, class:^(zen)$"
+        "noborder, class:^(com\\.mitchellh\\.ghostty)$"
+        "noborder, class:^(kitty)$"
+
+        # Floating windows
+        "float, class:^(gnome-calculator)$"
+        "float, class:^(blueman-manager)$"
+        "float, class:^(org\\.gnome\\.Nautilus)$"
+
+        # Open DMS windows as floating by default
+        "float, class:^(org.quickshell)$"
       ];
     };
+  };
+
+  programs.dank-material-shell = {
+    enable = true;
+
+    systemd = {
+      enable = true; # Systemd service for auto-start
+      restartIfChanged = true; # Auto-restart dms.service when dank-material-shell changes
+    };
+
+    # Core features
+    enableSystemMonitoring = true; # System monitoring widgets (dgop)
+    enableVPN = true; # VPN management widget
+    enableDynamicTheming = true; # Wallpaper-based theming (matugen)
+    enableAudioWavelength = true; # Audio visualizer (cava)
+    enableCalendarEvents = true; # Calendar integration (khal)
+    enableClipboardPaste = true; # Pasting items from the clipboard (wtype)
   };
 
   services.hyprpaper = {
@@ -413,12 +479,12 @@ in
       nushell
       pavucontrol
       streamcontroller
-      (inputs.affinity-nix.packages.${system}.v3)
+      # (inputs.affinity-nix.packages.${system}.v3)
       pureref
       beeref
       bambu-studio
       orca-slicer
-      freecad-wayland
+      # freecad-wayland
       gnome-weather
       caligula
       ncspot
@@ -426,6 +492,10 @@ in
       trayscale
 
       fish # trying it out
+
+      dgop
+      accountsservice
+      matugen
 
       # jetbrains.idea
 

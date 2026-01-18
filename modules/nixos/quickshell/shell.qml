@@ -6,7 +6,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-// import Quickshell.Io
+import Quickshell.Services.Notifications
 
 import "./Widgets"
 
@@ -39,7 +39,72 @@ Scope {
 
 	ReloadPopup { }
 
-	Notification {  }
+	PanelWindow {
+		// exclusionMode: ExclusionMode.Ignore
+
+		anchors {
+			top: true
+			right: true
+		}
+
+		margins {
+			top: 40
+			right: 40
+		}
+
+		// implicitWidth: notificationColumn.width
+		// implicitHeight: notificationColumn.height * 4
+
+		implicitWidth: 450
+		implicitHeight: 600
+
+		// implicitWidth: notificationListView.width
+		// implicitHeight: notificationListView.contentHeight * 3
+		
+		visible: NotifServer.notifications.values.length > 0
+
+		color: "transparent"
+
+
+		// ColumnLayout {
+		// 	id: notificationColumn
+		// 	Layout.fillWidth: true
+		// 	Layout.fillHeight: true
+		// 	Repeater {
+		// 		model: notifications
+		// 		Notification {
+		// 			property var modelData
+		// 			notification: modelData
+		// 		}
+		// 	}
+		// }
+
+
+		ListView {
+			id: notificationListView
+			
+			model: NotifServer.notifications
+			anchors.fill: parent
+			// implicitWidth: 
+
+			// delegate: Text {
+			// 	required property Notification modelData
+			// 	text: `${modelData.appName}`
+			// 	color: colorMantle
+			// }
+			delegate: NotificationItem {
+				required property var modelData
+				// text: `${modelData.appName}`
+				// color: colorMantle
+				notification: modelData
+			}
+			// delegate: Text {
+			// 	required property var modelData
+			// 	text: `${modelData.appName}`
+			// 	color: colorMantle
+			// }
+		}
+	}
 
 	Bar {}
 	

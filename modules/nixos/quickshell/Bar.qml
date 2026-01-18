@@ -210,6 +210,12 @@ Scope {
 									text: formatPlayerInfo()
 									color: colorText
 
+									// TODO: make this fucking work w/ max width
+									elide: Text.ElideRight
+									width: 400
+									// Layout.fillWidth: true
+									// Layout.maximumWidth: 200
+
 									function formatPlayerInfo() {
 										const player = parent.player
 										let playerString = "" 
