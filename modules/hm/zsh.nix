@@ -58,6 +58,10 @@ in
 
         "nixconf" = "code ~/dotfiles";
         "dotfiles" = "z ~/dotfiles";
+
+        # timestamps
+        "ts" = "date +%s";
+        "tsms" = "date +%s%3N";
       };
 
       initContent = ''

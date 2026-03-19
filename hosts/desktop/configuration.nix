@@ -11,12 +11,12 @@
 
 let
   wallpaperPath = ../../files/wallpapers/rayquaza_catppuccin.png;
-  wallpaperName = builtins.baseNameOf wallpaperPath;
+  wallpaperName = baseNameOf wallpaperPath;
   wallpaper = pkgs.runCommand wallpaperName { } ''
     local_path=${wallpaperPath}
     cp "$local_path" "$out"
   '';
-  sddm-theme = inputs.silentSDDM.packages.${pkgs.system}.default.override {
+  sddm-theme = inputs.silentSDDM.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
     # theme = "rei";
     extraBackgrounds = [ wallpaper ];
 
@@ -41,9 +41,28 @@ in
     ./hardware-configuration.nix
     ../../user.nix
     inputs.home-manager.nixosModules.default
+    inputs.dms.nixosModules.greeter
   ];
 
   programs.hyprland.enable = true;
+
+  programs.dank-material-shell.greeter = {
+    enable = true;
+    compositor = {
+      name = "hyprland";
+      customConfig = ''
+        monitor = DP-2, 2560x1440@144, 0x0,     1
+        monitor = , disabled
+      '';
+    };
+
+    configHome = "/home/jade";
+
+    logs = {
+      save = true;
+      path = "/tmp/dms-greeter.log";
+    };
+  };
 
   primary-user = {
     enable = true;
@@ -69,13 +88,26 @@ in
       "amd_pstate=active"
     ];
 
-    loader.systemd-boot = {
-      enable = lib.mkForce false;
-      consoleMode = "1";
+    loader = {
+      systemd-boot = {
+        enable = lib.mkForce false;
+        consoleMode = "1";
+      };
+
+      limine = {
+        enable = true;
+        secureBoot.enable = true;
+        maxGenerations = 32;
+        extraEntries = ''
+          /Windows
+          	protocol: efi
+          	path: uuid(da7ee82a-d873-48d4-81d5-9ad29db80315):/EFI/Microsoft/Boot/bootmgfw.efi
+        '';
+      };
     };
 
     lanzaboote = {
-      enable = true;
+      enable = false;
       pkiBundle = "/var/lib/sbctl";
     };
 
@@ -127,13 +159,14 @@ in
   services.xserver.displayManager.setupCommands = ''
     X_RANDR="${lib.getExe pkgs.xorg.xrandr}"
 
-    $X_RANDR --output DisplayPort-1 --off
+    $X_RANDR --output DisplayPort-2 --off
     $X_RANDR --output HDMI-A-0 --off
 
-    $X_RANDR --output DisplayPort-2 --primary --mode 2560x1440
+    $X_RANDR --output DisplayPort-1 --primary --mode 2560x1440
   '';
 
   services.power-profiles-daemon.enable = true;
+  services.accounts-daemon.enable = true;
 
   services.displayManager.sessionPackages = [ pkgs.hyprland ];
 
@@ -150,8 +183,9 @@ in
   security.pam.services = {
     # sddm.enableGnomeKeyring = true;
     # login.enableGnomeKeyring = true;
-    hyprland.enableGnomeKeyring = true;
-    ly.enableGnomeKeyring = true;
+    # hyprland.enableGnomeKeyring = true;
+    # ly.enableGnomeKeyring = true;
+    greetd.enableGnomeKeyring = true;
   };
 
   security.unprivilegedUsernsClone = true;
@@ -187,29 +221,50 @@ in
       "org.vinegarhq.Sober"
       "app.xmcl.voxelum"
       "com.usebruno.Bruno"
+      "com.modrinth.ModrinthApp"
+      "com.github._0negal.Viper"
     ];
   };
 
   services.tailscale.enable = true;
 
-  networking.firewall = rec {
-    enable = true;
-    allowedTCPPorts = [
-      5173
-      5520
-    ];
-    allowedUDPPorts = [
-      5173
-      5520
-    ];
+  services.openvpn = {
+    servers = {
+      nord1 = {
+        config = ''
+          config /etc/openvpn/nord1.ovpn
+        '';
+      };
+    };
+  };
 
-    allowedTCPPortRanges = [
-      {
-        from = 1714;
-        to = 1764;
-      }
-    ];
-    allowedUDPPortRanges = allowedTCPPortRanges;
+  networking = {
+    networkmanager = {
+      enable = true;
+      plugins = with pkgs; [
+        networkmanager-openvpn
+      ];
+    };
+    firewall = rec {
+      enable = true;
+      allowedTCPPorts = [
+        5173
+        5520
+      ];
+      allowedUDPPorts = [
+        5173
+        5520
+      ];
+
+      allowedTCPPortRanges = [
+        # KDE Connect
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ];
+      allowedUDPPortRanges = allowedTCPPortRanges;
+    };
   };
 
   # Recommended by nixd
@@ -239,7 +294,7 @@ in
       file
       xdg-utils
       efibootmgr
-      hyprpolkitagent
+      # hyprpolkitagent
       (inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default)
       jq # just for privacy dots
       dbus # just for privacy dots

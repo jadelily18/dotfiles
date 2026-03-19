@@ -45,6 +45,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    matugen = {
+      url = "github:/InioX/Matugen/v3.1.0";
+      # If you need a specific version:
+      # ref = "refs/tags/matugen-v0.10.0";
+      # refs = "refs/tags/v3.1.0";
+    };
+
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
@@ -267,6 +274,8 @@
           rofi-bookmarks-zen = pkgs.callPackage ./pkgs/rofi-bookmarks-zen/derivation.nix {
             inherit pypkgs pkgs;
           };
+
+          flightcore = pkgs.callPackage ./pkgs/flightcore/derivation.nix { inherit pkgs; };
 
           fluent-emoji-webfont = fluent-emoji;
           fluent-emoji-webfont-all = fluent-emoji-all;

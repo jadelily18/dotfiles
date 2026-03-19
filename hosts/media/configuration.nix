@@ -26,7 +26,7 @@
     ];
   };
 
-  stylix-theme.enable = true;
+  # stylix-theme.enable = true;
 
   gnupg.enable = true;
 

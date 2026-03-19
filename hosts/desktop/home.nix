@@ -17,6 +17,7 @@ in
     inputs.spicetify-nix.homeManagerModules.spicetify
     inputs.zen-browser.homeModules.beta
     inputs.dms.homeModules.dank-material-shell
+    inputs.matugen.nixosModules.default
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -40,8 +41,8 @@ in
       "$mod" = "SUPER";
       "$terminal" = "kitty";
       monitor = [
-        "DP-3,     2560x1440@144, 0x0,     1" # main display
-        "DP-2,     2560x1440@60,  2560x0,  1" # right display
+        "DP-2,     2560x1440@144, 0x0,     1" # main display
+        "DP-3,     2560x1440@60,  2560x0,  1" # right display
         "HDMI-A-1, 2560x1440@60,  -2560x0, 1" # left display
         ",         preferred,     auto,    1" # for any other display, set preferred resolution and place on the right
       ];
@@ -52,6 +53,9 @@ in
         "XCURSOR_THEME,                rose-pine-hyprcursor"
         "HYPRCURSOR_SIZE,              24"
         "XCURSOR_SIZE,                 24"
+        "GTK_THEME,                    adw-gtk3"
+        "QT_QPA_PLATFORMTHEME,         qt6ct"
+        "QT_QPA_PLATFORMTHEME_QT6,     qt6ct"
       ];
       layerrule = [
         "blur on, match:namespace quickshell"
@@ -87,7 +91,10 @@ in
         # "$mod,       Space,     exec, rofi -show drun -display-drun ♥ -show-icons" # App launcher
         "$mod,       B,         exec, ${myPkgs.rofi-bookmarks-zen}/bin/main | rofi -dmenu -p \"bark! wruff!\" -show-icons" # Bookmarks
         "$mod SHIFT, C,         exec, hyprpicker -a" # Color picker
-        "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
+        # "$mod SHIFT, S,         exec, grimblast --freeze save area - | swappy -f - -o - | wl-copy" # Screenshots
+        "$mod SHIFT, S,         exec, dms screenshot --no-clipboard --stdout | swappy -f - -o - | wl-copy" # Screenshots
+        "$mod SHIFT, G,         exec, pkill slurp" # if slurp decides to freeze
+        # "$mod SHIFT, S,         exec, dms screenshot" # Screenshots
         "$mod SHIFT, R,         exec, kooha"
         "$mod SHIFT, Z,         exec, zen-beta"
         "$mod SHIFT, L,         exec, reload-waybar"
@@ -167,8 +174,9 @@ in
         # "source = ~/.config/hypr/dms/outputs.con;f"
       ];
       exec-once = [
-        "systemctl --user start hyprpolkitagent"
+        # "systemctl --user start hyprpolkitagent"
         "systemctl --user start hyprpaper"
+        "systemctl --user start dms"
         # "waybar"
         # "swaync -c ~/dotfiles/modules/hm/swaync/config.json -s ~/dotfiles/modules/hm/swaync/style.css"
         "uair"
@@ -203,6 +211,17 @@ in
       general = {
         "col.active_border" = lib.mkForce "0xFFEDABD6";
       };
+      windowrule = [
+        # Steam
+        "match:class steam, match:title Steam, tile on, size 70 100"
+        "match:class steam, match:title (Friends List), tile on, size 30 100"
+        "match:class steam, match:title (Special Offers), float on, center on"
+        "match:class steam, match:title (Shutdown), float on, center on"
+
+        # Zen Browser
+        # "match:class zen-beta, match:title (Opening.*), float on, center on, size 700 320"
+        "match:class zen-beta, match:initial_title (), float on, center on, size 700 320"
+      ];
       windowrulev2 = [
         "float,class:^(org.pulseaudio.pavucontrol)$"
         "size 750 550,class:^(org.pulseaudio.pavucontrol)$"
@@ -230,6 +249,14 @@ in
 
         # Open DMS windows as floating by default
         "float, class:^(org.quickshell)$"
+
+        # Steam
+        # "tile on, class:^(steam)$, title:^(Steam)$"
+        # "size 70% 100%, class:^(steam)$, title:^(Steam)$"
+
+        # "tile on, class:^(steam)$, title:^(Friends List)$"
+        # "size 30% 100%, class:^(steam)$, title:^(Friends List)$"
+
       ];
     };
   };
@@ -249,6 +276,11 @@ in
     enableAudioWavelength = true; # Audio visualizer (cava)
     enableCalendarEvents = true; # Calendar integration (khal)
     enableClipboardPaste = true; # Pasting items from the clipboard (wtype)
+  };
+
+  programs.matugen = {
+    enable = true;
+
   };
 
   services.hyprpaper = {
@@ -340,7 +372,11 @@ in
   };
 
   programs.kitty.enable = lib.mkForce true;
-  kitty.useX11 = false;
+  # kitty.useX11 = false;
+  kitty = {
+    useX11 = false;
+    enableDms = true;
+  };
 
   services.kdeconnect.enable = true;
 
@@ -351,15 +387,26 @@ in
 
   gtk = {
     enable = true;
-    theme = {
-      # name = lib.mkForce "Catppuccin-Mocha-Pink";
-      # package = lib.mkForce pkgs.catppuccin-gtk;
-      # name = lib.mkForce "Breeze-Dark";
-      # package = lib.mkForce pkgs.kdePackages.breeze-gtk;
-    };
+    # theme = {
+    #   # name = lib.mkForce "Catppuccin-Mocha-Pink";
+    #   # package = lib.mkForce pkgs.catppuccin-gtk;
+    #   # name = lib.mkForce "Breeze-Dark";
+    #   # package = lib.mkForce pkgs.kdePackages.breeze-gtk;
+    # };
+    # theme = {
+    #   name = "adw-gtk3-dark";
+    #   package = pkgs.adw-gtk3;
+    # };
     iconTheme = {
       name = "kora";
       package = pkgs.kora-icon-theme;
+    };
+  };
+
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      gtk-theme = "adw-gtk3-dark";
+      color-scheme = "prefer-dark";
     };
   };
 
@@ -395,13 +442,13 @@ in
         "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
         "text/html" = [ "zen-beta.desktop" ];
         "application/pdf" = [ "org.gnome.Evince.desktop" ];
-        "image/*" = [ "org.gnome.Loupe.desktop" ];
+        "image/*" = [ "dms-open.desktop" ];
         "image/png" = [ "org.gnome.Loupe.desktop" ];
         "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
         "video/*" = [ "vlc.desktop" ];
         "audio/*" = [ "vlc.desktop" ];
-        "application/zip" = [ "org.gnome.FileRoller.desktop" ];
-        "application/x-modrinth-modpack+zip" = [ "org.gnome.FileRoller.desktop" ];
+        "application/zip" = [ "dms-open.desktop" ];
+        "application/x-modrinth-modpack+zip" = [ "dms-open.desktop" ];
       };
     };
   };
@@ -432,7 +479,7 @@ in
       steam
       filezilla
       prismlauncher
-      modrinth-app
+      # modrinth-app
       smile
       davinci-resolve # doesn't work properly and I don't want to fix it right now
 
@@ -479,7 +526,7 @@ in
       nushell
       pavucontrol
       streamcontroller
-      # (inputs.affinity-nix.packages.${system}.v3)
+      (inputs.affinity-nix.packages.${system}.v3)
       pureref
       beeref
       bambu-studio
@@ -490,17 +537,24 @@ in
       ncspot
       ghostty
       trayscale
+      chatterino2
+      jrnl
+      mission-center
+      myPkgs.flightcore
 
       fish # trying it out
 
       dgop
-      accountsservice
-      matugen
+      adw-gtk3
+
+      fastfetch
+
+      nmap
 
       # jetbrains.idea
 
       #! Hyprland stuff
-      swaynotificationcenter
+      # swaynotificationcenter
       cliphist
       nautilus
       hyprpicker
@@ -543,6 +597,8 @@ in
   git.signingKey = "910F4FE160AE36BA";
 
   zsh.enableDirenv = true;
+
+  stylix.autoEnable = false;
 
   stylix.targets = {
     # gitui's theming is kinda broken
@@ -616,6 +672,16 @@ We ask that you resubmit your project for review, we appreciate your patience an
 ";
           }
           {
+            trigger = ":mrmpex";
+            replace = "## Excessive Modpack Overrides  
+It looks like your project is distributing a lot of content as overrides.  
+Most of the time, this is unnecessary and excessive overrides can create a worse experience for your users, make it hard to update your modpack, and prevent mod creators from earning rewards.  
+We ask that you ensure any applicable content is included as an embedded part of your modpack instead of being distributed as an override, for instance, by using the version of a mod available on Modrinth directly. If you've already followed this step, you may need to re-export your modpack.  
+Remember to delete prior versions of your modpack upon resubmission.   
+If your modpack still contains a high number of overrides when you resubmit, please provide a comprehensive list of the origins and proof of your permissions for each mod, resource pack, or data pack in the overrides folder of your modpack.  
+";
+          }
+          {
             trigger = ":mrmmh";
             replace = "(This is from [Fabulously Optimized](https://modrinth.com/modpack/fabulously-optimized), so you must link back there)";
           }
@@ -627,12 +693,34 @@ We ask that you resubmit your project for review, we appreciate your patience an
             trigger = ":mrproj";
             replace = "https://modrinth.com/project/";
           }
+          {
+            trigger = ":mrdesc";
+            replace = "https://modrinth.com/project/$|$/settings/description";
+          }
+          {
+            trigger = ":mrmpinsuf";
+            replace = "## Insufficient Description
+
+Per section 2.1 of [Modrinth's Content Rules](https://modrinth.com/legal/rules), your project's [Description](https://modrinth.com/project/$|$/settings/description) should clearly inform the reader of the content, purpose, and appeal of your project.
+
+Currently, it looks like there are some missing details.
+
+What does your modpack add? What features does it have? Why would a user want to download it?  
+Check out descriptions like [What Is My FPS??](https://modrinth.com/modpack/WIMP) or [Aged](https://modrinth.com/modpack/aged) for inspiration when creating a quality and informative description.
+";
+          }
         ];
       };
     };
   };
 
-  programs.zen-browser.enable = true;
+  programs.zen-browser = {
+    enable = true;
+
+    # profiles."*".userChrome = ''
+    #   ${builtins.readFile "/home/jade/.config/DankMaterialShell/zen.css"}
+    # '';
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -652,6 +740,8 @@ We ask that you resubmit your project for review, we appreciate your patience an
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+
+    # ".zen/w3x4v6qv.Default/chrome/userChrome.css".source = ../../.config/DankMaterialShell/zen.css;
   };
 
   # Home Manager can also manage your environment variables through

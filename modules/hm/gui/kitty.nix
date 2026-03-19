@@ -17,6 +17,10 @@ in
       default = true;
       description = "Use X11 instead of Wayland";
     };
+    enableDms = lib.mkEnableOption {
+      default = false;
+      description = "Enable Dank Material Shell kitty integration";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -56,6 +60,11 @@ in
         kitty_mod = "ctrl";
 
         window_padding_width = 20;
+
+        extraConfig = lib.mkIf cfg.enableDms ''
+          include dank-tabs.conf
+          include dank-theme.conf
+        '';
       };
     };
   };
