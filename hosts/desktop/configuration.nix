@@ -101,7 +101,7 @@ in
         extraEntries = ''
           /Windows
           	protocol: efi
-          	path: uuid(da7ee82a-d873-48d4-81d5-9ad29db80315):/EFI/Microsoft/Boot/bootmgfw.efi
+          	path: boot():/EFI/Microsoft/Boot/bootmgfw.efi
         '';
       };
     };
@@ -298,6 +298,7 @@ in
       (inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default)
       jq # just for privacy dots
       dbus # just for privacy dots
+      limine
     ]
     ++ (with pkgs.kdePackages; [
       qtsvg

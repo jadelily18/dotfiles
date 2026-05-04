@@ -1,0 +1,60 @@
+[0;1;31mFailed to read "/boot/EFI/systemd": Permission denied[0m
+[0;1;31mFailed to open '/boot/loader/loader.conf': Permission denied[0m
+[0;4mSystem:[0m
+      Firmware: [0;1;39mn/a (n/a)[0m
+ Firmware Arch: x64
+   Secure Boot: [0mdisabled[0m
+  TPM2 Support: [0;1;32myes[0m
+  Measured UKI: no
+  Boot into FW: supported
+
+[0;4mCurrent Boot Loader:[0m
+       Product: [0;1;39mLimine 10.6.2[0m
+     Features: [0;1;31m✗[0m Boot counting
+               [0;1;31m✗[0m Menu timeout control
+               [0;1;31m✗[0m One-shot menu timeout control
+               [0;1;31m✗[0m Default entry control
+               [0;1;31m✗[0m One-shot entry control
+               [0;1;31m✗[0m Support for XBOOTLDR partition
+               [0;1;31m✗[0m Support for passing random seed to OS
+               [0;1;31m✗[0m Load drop-in drivers
+               [0;1;31m✗[0m Support Type #1 sort-key field
+               [0;1;31m✗[0m Support @saved pseudo-entry
+               [0;1;31m✗[0m Support Type #1 devicetree field
+               [0;1;31m✗[0m Enroll SecureBoot keys
+               [0;1;31m✗[0m Retain SHIM protocols
+               [0;1;31m✗[0m Menu can be disabled
+               [0;1;31m✗[0m Multi-Profile UKIs are supported
+               [0;1;31m✗[0m Loader reports network boot URL
+               [0;1;31m✗[0m Support Type #1 uki field
+               [0;1;31m✗[0m Support Type #1 uki-url field
+               [0;1;31m✗[0m Loader reports TPM2 active PCR banks
+     Partition: /dev/disk/by-partuuid/4734f1d1-86e5-e842-a307-71119f39c9dd
+
+[0;4mRandom Seed:[0m
+ System Token: not set
+       Exists: Can't access /boot/loader/random-seed (Permission denied)
+
+[0;4mAvailable Boot Loaders on ESP:[0m
+          ESP: /boot (/dev/disk/by-partuuid/4734f1d1-86e5-e842-a307-71119f39c9dd)
+         File: (can't access /boot: Permission denied)
+
+[0;4mBoot Loaders Listed in EFI Variables:[0m
+        Title: [0;1;39mLimine[0m
+           ID: 0x0000
+       Status: active, boot-order
+    Partition: /dev/disk/by-partuuid/4734f1d1-86e5-e842-a307-71119f39c9dd
+         File: └─[0;38;5;245m/boot/[0m/efi/limine/BOOTX64.EFI
+
+        Title: [0;1;39mWindows Boot Manager[0m
+           ID: 0x0001
+       Status: active, boot-order
+    Partition: /dev/disk/by-partuuid/4734f1d1-86e5-e842-a307-71119f39c9dd
+         File: └─[0;38;5;245m/boot/[0m/EFI/Microsoft/Boot/bootmgfw.efi
+
+        Title: [0;1;39mUEFI OS[0m
+           ID: 0x0003
+       Status: active, boot-order
+    Partition: /dev/disk/by-partuuid/4734f1d1-86e5-e842-a307-71119f39c9dd
+         File: └─[0;38;5;245m/boot/[0m/EFI/BOOT/BOOTX64.EFI
+
